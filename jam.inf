@@ -1,0 +1,148 @@
+!% -~S
+!% $OMIT_UNUSED_ROUTINES=1
+
+! The very first lines of the main source code file for a game can contain compiler options, like the two lines above.
+! -~S disables strict error checking. This is otherwise used in z5 and z8 games by default. While useful for debugging,
+!   it adds ~10 KB to the story file size and it makes the game slower.
+! $OMIT_UNUSED_ROUTINES=1 makes the compiler remove all routines which aren't used. This can save some space.
+
+Constant Story      "Your gamename goes here"; ! Change!
+Constant Headline   "^A PunyJam #1 game.^"; ! Change if you like
+
+! Uncomment ONE of the two following lines, to show either time or score/turns
+! Leaving both commented out makes the library bigger.
+!Constant STATUSLINE_TIME; Statusline time;
+Constant STATUSLINE_SCORE; Statusline score;
+
+! Uncomment to not keep track of score
+! The value is what will be shown as the score on statusline in z3
+!Constant NO_SCORE = 0;
+
+! Uncomment to add optional features to PunyInform
+!Constant DEBUG;
+!Constant CUSTOM_ABBREVIATIONS;
+!Constant OPTIONAL_NO_DARKNESS;
+!Constant OPTIONAL_ALLOW_WRITTEN_NUMBERS;
+!Constant OPTIONAL_EXTENDED_METAVERBS;
+!Constant OPTIONAL_EXTENDED_VERBSET;
+!Constant OPTIONAL_PRINT_SCENERY_CONTENTS;
+!Constant OPTIONAL_SCORED;
+!Constant OPTIONAL_FULL_SCORE; ! Comment out NO_SCORE when uncommenting this
+!Constant OPTIONAL_FULL_DIRECTIONS;
+Constant OPTIONAL_SIMPLE_DOORS;
+!Constant OPTIONAL_SHIP_DIRECTIONS;
+!Constant OPTIONAL_GUESS_MISSING_NOUN;
+!Constant OPTIONAL_MANUAL_SCOPE;
+!Constant OPTIONAL_MANUAL_REACTIVE;
+!Constant OPTIONAL_ORDERED_TIMERS;
+!Constant OPTIONAL_PROVIDE_UNDO;
+!Constant OPTIONAL_REACTIVE_PARSE_NAME;
+!Constant RUNTIME_ERRORS = 0; ! 0, 1 or 2. 0 = smallest file, 2 = most info
+
+! Define any library constants you need here, like MAX_SCORE, AMUSING_PROVIDED,
+! MAX_CARRIED, SACK_OBJECT,  etc.
+
+Constant INITIAL_LOCATION_VALUE = BroomCloset;
+
+Include "globals.h";
+
+! Define your own global variables here, if any
+
+! Define the entry point routines you need here, like Amusing, DarkToDark etc.
+
+! Uncomment to add PunyLib extensions
+!Include "ext_menu.h";
+!Include "ext_flags.h";
+!Include "ext_quote_box.h";
+!Include "ext_cheap_scenery.h";
+
+Include "puny.h";
+
+! Uncomment to add PunyLib extensions
+!Include "ext_waittime.h";
+
+Object BroomCloset "Broom Closet"
+	with
+		description "You're in the rather dirty broom closet of The Red Anchor.
+			Various cleaning appliances line the walls. There's a pile of fabric
+			in a corner.",
+		e_to BroomClosetDoor,
+	has light;
+
+Object -> PileOfFabric "pile of fabric"
+	with
+		name 'pile' 'of' 'fabric',
+	has scenery;
+
+Object -> Note "note"
+	with
+		name 'note',
+		initial "A note has been fixed to the wall with a knife.",
+		after [;
+			Take:
+				if(Knife hasnt moved && self hasnt general) {
+					! Use the general attribute to say we've already pulled
+					! the note from the wall, so we don't print this twice.
+					give self general;
+					"The knife rips a long hole in the note as you pull the
+						note from the wall.";
+				}
+		];
+
+Object -> Knife "knife"
+	with
+		name 'knife',
+		describe [;
+			if(self hasnt moved) {
+				if(Note hasnt moved) {
+					! Knife and note haven't moved. Knife is mentioned in
+					! description of note
+					rtrue;
+				}
+				! The knife hasnt been moved but the note is gone.
+				"^A knife is stuck to the wall.";
+			}
+			! The knife has been moved. Now it should just be described as a
+			! regular object
+			rfalse;
+		],
+		after [;
+			Take:
+				if(Note hasnt moved) {
+					give Note moved;
+					"The note falls to the floor as you pull out the knife.";
+				}
+		];
+
+Object BroomClosetDoor "broom closet door"
+	with
+		parse_name [ w1 w2 w3;
+			w1 = NextWord(); w2 = NextWord(); w3 = NextWord();
+			if(w1 == 'broom' && w2 == 'closet' && w3 == 'door') return 3;
+			if(w1 == 'closet' && w2 == 'door') return 2;
+			if(w1 == 'door') return 1;
+		],
+		when_open [;
+			if(self in BroomCloset)
+				"You can see the pub through the door opening to the east.";
+			"The door to the west is open, revealing a broom closet.";
+		],
+		when_closed [;
+			if(self in BroomCloset)
+				"The pub lies beyond the closed door to the east.";
+			"There's a closed door to the west.";
+		],
+		found_in BroomCloset Pub,
+		door_dir (e_to) (w_to),
+	has static door openable;
+
+Object Pub "Pub"
+	with
+		description "A nondescript pub.",
+		w_to BroomClosetDoor,
+	has light;
+
+
+[Initialise;
+	print "^^Print an intro text here if you like...^^"; ! Change!
+];
