@@ -6,13 +6,6 @@
 !   it adds ~10 KB to the story file size and it makes the game slower.
 ! $OMIT_UNUSED_ROUTINES=1 makes the compiler remove all routines which aren't used. This can save some space.
 
-#IfV3;
-#IfnDef USE_PUNY;
-! For v3, switch to Puny automatically, since Inform lib can't be used for v3.
-Constant USE_PUNY;
-#EndIf;
-#EndIf;
-
 Constant Story      "Your gamename goes here"; ! Change!
 Constant Headline   "^A PunyJam #1 game.^"; ! Change if you like
 
@@ -51,17 +44,6 @@ Constant OPTIONAL_SIMPLE_DOORS;
 
 Constant INITIAL_LOCATION_VALUE = BroomCloset;
 
-! Standard
-#IfnDef USE_PUNY;
-Include "parser";
-Include "verblib";
-Include "infglk";
-#EndIf;
-
-! Puny
-#IfDef USE_PUNY;
-#EndIf;
-
 ! Define your own global variables here, if any
 
 ! Define the entry point routines you need here, like Amusing, DarkToDark etc.
@@ -72,10 +54,8 @@ Include "infglk";
 !Include "ext_quote_box.h";
 !Include "ext_cheap_scenery.h";
 
-#IfDef USE_PUNY;
 Include "globals.h";
 Include "puny.h";
-#EndIf;
 
 ! Uncomment to add PunyLib extensions
 !Include "ext_waittime.h";
@@ -90,7 +70,8 @@ Object BroomCloset "Broom Closet"
 
 Object -> PileOfFabric "pile of fabric"
 	with
-		name 'pile' 'of' 'fabric',
+		name 'pile' 'of' 'fabric' 'bandages',
+        description "The fabric is discarded bandages",
 	has scenery;
 
 Object -> Note "note"
@@ -159,8 +140,29 @@ Object Pub "Pub"
 	with
 		description "A nondescript pub.",
 		w_to BroomClosetDoor,
+        e_to Bathroom,
+        ! n_to Street
+        ! d_to Cellar
 	has light;
 
+Object Bathroom "Pub bathroom"
+    with
+        description "The bathroom for the pub",
+        w_to Pub,
+    has light;
+
+Object -> Mirror "Bathroom mirror"
+    with name 'mirror';
+
+! Part 1
+! ------                                        |      Crypt     |
+!                                               | Police Station | 
+! River |   Street       |   Street    | Street |     Street     | Graveyard |
+!  |    | Broom cupboard |    Pub*     | Toilet |
+!  V                     | Beer garden |
+!
+! Part 2
+! ------
 
 [Initialise;
 	print "^^Print an intro text here if you like...^^"; ! Change!
