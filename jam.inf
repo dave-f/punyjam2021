@@ -6,6 +6,13 @@
 !   it adds ~10 KB to the story file size and it makes the game slower.
 ! $OMIT_UNUSED_ROUTINES=1 makes the compiler remove all routines which aren't used. This can save some space.
 
+#IfV3;
+#IfnDef USE_PUNY;
+! For v3, switch to Puny automatically, since Inform lib can't be used for v3.
+Constant USE_PUNY;
+#EndIf;
+#EndIf;
+
 Constant Story      "Your gamename goes here"; ! Change!
 Constant Headline   "^A PunyJam #1 game.^"; ! Change if you like
 
@@ -44,7 +51,16 @@ Constant OPTIONAL_SIMPLE_DOORS;
 
 Constant INITIAL_LOCATION_VALUE = BroomCloset;
 
-Include "globals.h";
+! Standard
+#IfnDef USE_PUNY;
+Include "parser";
+Include "verblib";
+Include "infglk";
+#EndIf;
+
+! Puny
+#IfDef USE_PUNY;
+#EndIf;
 
 ! Define your own global variables here, if any
 
@@ -56,7 +72,10 @@ Include "globals.h";
 !Include "ext_quote_box.h";
 !Include "ext_cheap_scenery.h";
 
+#IfDef USE_PUNY;
+Include "globals.h";
 Include "puny.h";
+#EndIf;
 
 ! Uncomment to add PunyLib extensions
 !Include "ext_waittime.h";
