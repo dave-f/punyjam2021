@@ -60,90 +60,93 @@ Include "puny.h";
 ! Uncomment to add PunyLib extensions
 !Include "ext_waittime.h";
 
+! ------------------------------ Pub ------------------------------
+
 Object BroomCloset "Broom Closet"
-	with
-		description "You're in the rather dirty broom closet of The Red Anchor.
-			Various cleaning appliances line the walls. There's a pile of fabric
-			in a corner.",
-		e_to BroomClosetDoor,
-	has light;
+    with
+        description "You're in the rather dirty broom closet of The Red Anchor.
+            Various cleaning appliances line the walls. There's a pile of fabric
+            in a corner.",
+        e_to BroomClosetDoor,
+    has light;
 
 Object -> PileOfFabric "pile of fabric"
-	with
-		name 'pile' 'of' 'fabric' 'bandages',
+    with
+        name 'pile' 'of' 'fabric' 'bandages',
         description "The fabric is discarded bandages",
-	has scenery;
+    has scenery;
 
 Object -> Note "note"
-	with
-		name 'note',
-		initial "A note has been fixed to the wall with a knife.",
-		after [;
-			Take:
-				if(Knife hasnt moved && self hasnt general) {
-					! Use the general attribute to say we've already pulled
-					! the note from the wall, so we don't print this twice.
-					give self general;
-					"The knife rips a long hole in the note as you pull the
-						note from the wall.";
-				}
-		];
+    with
+        name 'note',
+        initial "A note has been fixed to the wall with a knife.",
+        description "The note contains the usual hieroglyhs.",
+        after [;
+            Take:
+                if(Knife hasnt moved && self hasnt general) {
+                    ! Use the general attribute to say we've already pulled
+                    ! the note from the wall, so we don't print this twice.
+                    give self general;
+                    "The knife rips a long hole in the note as you pull the
+                        note from the wall.";
+                }
+        ];
 
 Object -> Knife "knife"
-	with
-		name 'knife',
-		describe [;
-			if(self hasnt moved) {
-				if(Note hasnt moved) {
-					! Knife and note haven't moved. Knife is mentioned in
-					! description of note
-					rtrue;
-				}
-				! The knife hasnt been moved but the note is gone.
-				"^A knife is stuck to the wall.";
-			}
-			! The knife has been moved. Now it should just be described as a
-			! regular object
-			rfalse;
-		],
-		after [;
-			Take:
-				if(Note hasnt moved) {
-					give Note moved;
-					"The note falls to the floor as you pull out the knife.";
-				}
-		];
+    with
+        name 'knife',
+        describe [;
+            if(self hasnt moved) {
+                if(Note hasnt moved) {
+                    ! Knife and note haven't moved. Knife is mentioned in
+                    ! description of note
+                    rtrue;
+                }
+                ! The knife hasnt been moved but the note is gone.
+                "^A knife is stuck to the wall.";
+            }
+            ! The knife has been moved. Now it should just be described as a
+            ! regular object
+            rfalse;
+        ],
+        after [;
+            Take:
+                if(Note hasnt moved) {
+                    give Note moved;
+                    "The note falls to the floor as you pull out the knife.";
+                }
+        ];
 
 Object BroomClosetDoor "broom closet door"
-	with
-		parse_name [ w1 w2 w3;
-			w1 = NextWord(); w2 = NextWord(); w3 = NextWord();
-			if(w1 == 'broom' && w2 == 'closet' && w3 == 'door') return 3;
-			if(w1 == 'closet' && w2 == 'door') return 2;
-			if(w1 == 'door') return 1;
-		],
-		when_open [;
-			if(self in BroomCloset)
-				"You can see the pub through the door opening to the east.";
-			"The door to the west is open, revealing a broom closet.";
-		],
-		when_closed [;
-			if(self in BroomCloset)
-				"The pub lies beyond the closed door to the east.";
-			"There's a closed door to the west.";
-		],
-		found_in BroomCloset Pub,
-		door_dir (e_to) (w_to),
-	has static door openable;
+    with
+        parse_name [ w1 w2 w3;
+            w1 = NextWord(); w2 = NextWord(); w3 = NextWord();
+            if(w1 == 'broom' && w2 == 'closet' && w3 == 'door') return 3;
+            if(w1 == 'closet' && w2 == 'door') return 2;
+            if(w1 == 'door') return 1;
+        ],
+        when_open [;
+            if(self in BroomCloset)
+                "You can see the pub through the door opening to the east.";
+            "The door to the west is open, revealing a broom closet.";
+        ],
+        when_closed [;
+            if(self in BroomCloset)
+                "The pub lies beyond the closed door to the east.";
+            "There's a closed door to the west.";
+        ],
+        found_in BroomCloset Pub,
+        door_dir (e_to) (w_to),
+    has static door openable;
 
 Object Pub "Pub"
-	with
-		description "A nondescript pub.",
-		w_to BroomClosetDoor,
+    with
+        description "A nondescript pub.",
+        w_to BroomClosetDoor,
         e_to Bathroom,
         ! n_to Street
-        ! d_to Cellar
-	has light;
+        d_to Cellar
+    has light;
 
 Object Bathroom "Pub bathroom"
     with
@@ -152,11 +155,29 @@ Object Bathroom "Pub bathroom"
     has light;
 
 Object -> Mirror "Bathroom mirror"
-    with name 'mirror';
+    with name 'mirror',
+    has scenery;
+
+Object Cellar "Beer cellar"
+    with description "Pub beer cellar",
+    u_to Pub,
+  has light;
+
+Object -> MouseHole "Mouse hole"
+   with name 'mouse' 'hole',
+        description "Above it is inscribed Bliz and Nibs",
+   has static scenery container open;
+
+Object -> -> PyramidCharm "Pyramid Charm"
+   with name 'pyramid' 'charm',
+        description "A charm of a pyramid";
+
+! ------------------------------ Street ------------------------------
+
 
 ! Part 1
 ! ------                                        |      Crypt     |
-!                                               | Police Station | 
+!                                               | Police Station |
 ! River |   Street       |   Street    | Street |     Street     | Graveyard |
 !  |    | Broom cupboard |    Pub*     | Toilet |
 !  V                     | Beer garden |
@@ -165,5 +186,11 @@ Object -> Mirror "Bathroom mirror"
 ! ------
 
 [Initialise;
-	print "^^Print an intro text here if you like...^^"; ! Change!
+    print "^^Print an intro text here if you like...^^"; ! Change!
 ];
+
+Attribute legible;
+
+[ ReadSub; <<Examine noun>>; ];
+
+Extend 'read' first * legible -> Read;
