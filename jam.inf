@@ -64,23 +64,42 @@ Include "puny.h";
 
 Object BroomCloset "Broom Closet"
     with
-        description "You're in the rather dirty broom closet of The Red Anchor.
-            Various cleaning appliances line the walls. There's a pile of fabric
-            in a corner.",
+        description [;
+            print "You're in the rather dirty broom closet of The Red Anchor.  Various cleaning appliances line the walls.";
+            if (~~ self.fabric_taken)
+                " There's a pile of fabric in a corner.";
+            "";
+        ],
         e_to BroomClosetDoor,
+        fabric_taken,
+        initial [;
+            if (~~self.visited)
+            {
+                self.fabric_taken = false;
+            }
+        ],
     has light;
 
 Object -> PileOfFabric "pile of fabric"
     with
         name 'pile' 'of' 'fabric' 'bandages',
-        description "The fabric is discarded bandages",
+        description "The fabric is bits of bandage that have come off, more than likely when that clumsy policeman put you in here.",
+        after [;
+         Take: give self ~concealed; BroomCloset.fabric_taken = true;
+        ],
+    has concealed;
+
+Object -> Appliances "Cleaning appliances"
+    with
+        name 'cleaning' 'appliances',
+        description "Various cleaning bits and pieces all of which look too dirty to touch.",
     has scenery;
 
 Object -> Note "note"
     with
         name 'note',
         initial "A note has been fixed to the wall with a knife.",
-        description "The note contains the usual hieroglyhs.",
+        description "The note appears to have been written in a hurry.  It reads: 'Glad you could join us again - I don't have time to get the details down, suffice it to say it looks like it's happening again.  I'm getting some real heat on this one and could really use some help.   I'll be waiting down the station when you're ready - mind how yer go.'",
         after [;
             Take:
                 if(Knife hasnt moved && self hasnt general) {
@@ -95,6 +114,7 @@ Object -> Note "note"
 Object -> Knife "knife"
     with
         name 'knife',
+        description "The knife is pure gold and encrusted with jewels.  You recognise it immediately as the object capable of bringing you to existence.",
         describe [;
             if(self hasnt moved) {
                 if(Note hasnt moved) {
@@ -159,7 +179,7 @@ Object -> Mirror "Bathroom mirror"
     has scenery;
 
 Object Cellar "Beer cellar"
-    with description "Pub beer cellar",
+    with description "Pub beer cellar", ! with casks.  PUZZLE: 
     u_to Pub,
   has light;
 
