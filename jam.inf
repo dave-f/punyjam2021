@@ -186,11 +186,9 @@ Object -> -> PyramidCharm "Pyramid Charm"
 ! ------
 
 [Initialise;
-    print "^^Print an intro text here if you like...^^"; ! Change!
+    print "^^With the familiar crackle you come into being once more.  Consciousness thrills you, and you take a moment enjoying what it feels like to exist, before your thoughts turn to why you are needed ...^^";!
 ];
 
-Attribute legible;
-
-[ ReadSub; <<Examine noun>>; ];
-
-Extend 'read' first * legible -> Read;
+!Attribute legible;
+![ ReadSub; <<Examine noun>>; ];
+!Extend 'read' first * legible -> Read;
