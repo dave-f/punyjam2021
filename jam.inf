@@ -161,36 +161,94 @@ Object BroomClosetDoor "broom closet door"
 
 Object Pub "Pub"
     with
-        description "A nondescript pub.",
+        description "The Red Anchor is a small establishment, providing drinkers the very basics - beer and a place to sit.  Still, it manages to keep open through hard times.  The barman keeps his ear to the ground as a favour for the local police, although what he gets in return you've still not got to the bottom of.  Steps lead down to the cellar, and east leads to a bathroom.",
         w_to BroomClosetDoor,
         e_to Bathroom,
         ! n_to Street
         d_to Cellar
     has light;
 
+Object -> barman "barman"
+with   parse_name [ i;
+         while(NextWord() == 'barman' or 'bartender' or 'bartend' or 'man' or 'waiter') i++;
+         return i;
+       ],
+        description "A barman stands here, polishing glasses.",
+        life [;
+         Answer: "The barman seems uninterested and continues
+            polishing his glasses.";
+         Ask: switch (second)
+         {
+          'knife' : "The barman looks up at the clock. ~That thing's
+             been here long before I have, no real idea where it
+             came from.~";
+          'painting', 'picture' : "A sad expression fills the
+             barman's face. ~I asked the previous owner myself about
+             that picture. Haunting ain't it? Apparently a ship got
+             into some kind of trouble not far from here. Turned out
+             it went down with all hands on deck. All rather
+             depressing really.~";
+          'policeman' : "The barman looks towards the door. ~The
+             old lighthouse? It's not been used for years as far as
+             I know.~";
+          'cellar' : "Damn thing!";
+          'glass' : "The barman gives you a funny look. ~Er, people
+             usually drink from them.~";
+         }
+        ],
+ has    animate;
+
 Object Bathroom "Pub bathroom"
     with
-        description "The bathroom for the pub",
+        description "This small, cramped, bathroom provides the very basics; toilet, sink and mirror.  Presumably anyone in use of this facility doesn't hang around for long afterwards.",
         w_to Pub,
     has light;
 
-Object -> Mirror "Bathroom mirror"
+Object -> Toilet "toilet"
+    with name 'toilet' 'bog',
+         description "Looking at this rather sorry piece of porcelain, you're glad you no longer have the need to use it.",
+    has scenery container;
+
+Object -> Sink "sink"
+    with name 'sink',
+         description "The sink is just about visible underneath the grime built up around it.  No plug of course, but that's probably for the best.",
+    has scenery container;
+
+Object -> Mirror "mirror"
     with name 'mirror',
+         description "You stare back at yourself with a stark realisation of how different you look, the bandages covering a significant part of your body.  You decide not to dwell too much.",
     has scenery;
 
 Object Cellar "Beer cellar"
-    with description "Pub beer cellar", ! with casks.  PUZZLE: 
+    with description "Cellar seems a somewhat grand choice of word for this small cramped area.  It's a very tiny underground area with a pungent smell of beer.  Steps lead back up to the pub.",
     u_to Pub,
   has light;
 
-Object -> MouseHole "Mouse hole"
-   with name 'mouse' 'hole',
-        description "Above it is inscribed Bliz and Nibs",
-   has static scenery container open;
+Object -> Cask "beer cask"
+    with name 'beer' 'cask',
+         description "The beer cask is made of wood, and is raised off the ground by small wooden feet.  It is connected to the bar above by a small pipe.",
+         before [;
+         LookUnder:
+            "You can just about make out a small mouse hole on the back wall underneath the cask.";
+         Pull,Push:
+            "The cask is pretty heavy, but you could probably look under it.";
+         ],
+  has static;
 
-Object -> -> PyramidCharm "Pyramid Charm"
-   with name 'pyramid' 'charm',
-        description "A charm of a pyramid";
+Object -> Pipe "pipe"
+    with name 'pipe',
+         description "The pipe connects this cask to the beer pumps up above.  It appears to have a small hole in it where beer is slowly leaking.",
+    has scenery;
+
+Object -> MouseHole "mouse hole"
+   with name 'mouse' 'hole',
+        description "Above the mouse hole someone has inscribed 'Bliz & Nibs'.",
+   has scenery container open;
+
+!Not sure yet
+!Object -> -> PyramidCharm "Pyramid Charm"
+!   with name 'pyramid' 'charm',
+!        description "A polished jade charm of a pyramid";
 
 ! ------------------------------ Street ------------------------------
 
@@ -209,6 +267,10 @@ Object -> -> PyramidCharm "Pyramid Charm"
     print "^^With the familiar crackle you come into being once more.  Consciousness thrills you, and you take a moment enjoying what it feels like to exist, before your thoughts turn to why you are needed ...^^";!
 ];
 
-!Attribute legible;
-![ ReadSub; <<Examine noun>>; ];
-!Extend 'read' first * legible -> Read;
+[LookUnderSub;
+  if(noun has animate or scenery) "What a concept!";
+  if(noun in player) "But you are holding ", (ItOrThem) noun, "!";
+  "You find nothing unexpected.";
+];
+
+Extend 'look' * 'under' noun -> LookUnder;
