@@ -103,7 +103,7 @@ Object -> Note "note"
     with
         name 'note',
         initial "A note has been fixed to the wall with a knife.",
-        description "The note appears to have been written in a hurry.  It reads: 'Glad you could join us again - I don't have time to get the details down, suffice it to say it looks like it's happening again.  I'm getting some real heat on this one and could really use some help.   I'll be waiting down the station when you're ready - mind how yer go.'",
+        description "The note appears to have been written in a hurry.  It reads: 'Glad you could join us again - don't have time to get the details down, suffice it to say it looks like it's happening again.  I'm getting some real heat on this one and could really use some help.   I'll be waiting down the station when you're ready - mind how yer go.'",
         after [;
             Take:
                 if(Knife hasnt moved && self hasnt general) {
@@ -170,13 +170,30 @@ Object Pub "Pub"
             {
                 print "As you step out the broom closet, the barman rushes over, ~Took yer bleedin' time didn't you, getting slow in yer old age~, he chuckles, before nearly coughing up a lung.  ~Well listen, I don't have time to be helping you on your feet, this damn beer pump is on the blink again.  Suffice it to say they're after you over the station again~.  Having said his piece, he returns to fiddling with a beer pump.^^";
             }
-            "The pub itself is a small establishment, providing drinkers the very basics - beer and a place to sit.  Still, it manages to keep open through hard times.  The barman keeps his ear to the ground as a favour for the local police, although what he gets in return you've still not got to the bottom of.  Steps lead down to the cellar, and east leads to a bathroom.";
+            "The pub itself is a small establishment, providing drinkers the very basics - beer and a place to sit.  Still, it manages to keep open through hard times.  The barman keeps his ear to the ground as a favour for the local police, although what he gets in return you've still not got to the bottom of.  Steps lead down to the cellar, east leads to a bathroom, while to the north is the door out.";
         ],
         w_to BroomClosetDoor,
         e_to Bathroom,
-        ! n_to Street
+        n_to PubDoor,
         d_to Cellar
     has light;
+
+Object  -> PubDoor "pub door"
+ with   name 'pub' 'door',
+        description [;
+            print "The pub door keeps the riff-raff out";
+            if (self has locked)
+            {
+                ", and currently locks you in.";
+            }
+            else
+            {
+                ".";
+            }
+        ],
+        door_to OutsidePub,
+        door_dir n_to,
+ has    scenery door openable lockable locked;
 
 Object -> BeerPump "beer pump"
        with name 'beer' 'pump',
@@ -195,7 +212,7 @@ with   parse_name [ i;
            }
            else
            {
-             "The barman is here, alternately pulling at the beer pump, followed by swearing.";
+             "The barman is here, alternately pulling feverishly at the beer pump, and swearing.";
            }
         ],
         life [;
@@ -243,7 +260,7 @@ Object -> Mirror "mirror"
     has scenery;
 
 Object Cellar "Beer cellar"
-    with description "Cellar seems a somewhat grand choice of word for this small cramped area.  It's a very tiny underground area with a pungent smell of beer.  Steps lead back up to the pub.",
+    with description "Cellar seems a somewhat grand choice of word for this small cramped area.  It's a tiny underground area with a pungent smell of beer.  Steps lead back up to the pub.",
     u_to Pub,
   has light;
 
@@ -320,3 +337,5 @@ Object -> MouseHole "mouse hole"
 
 Extend 'look' * 'under' noun -> LookUnder;
 Verb 'wrap' * held 'around' / 'on' noun -> PutOn;
+
+Include ">street.inf";
