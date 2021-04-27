@@ -84,8 +84,12 @@ Object -> PileOfFabric "pile of fabric"
     with
         name 'pile' 'of' 'fabric' 'bandages',
         description "The fabric is bits of bandage that have come off, more than likely when that clumsy policeman put you in here.",
+        before [;
+        Take: 
+        if (Pipe.workingFlag==1) { "The fabric is now stuck onto the pipe."; }
+        ],
         after [;
-         Take: give self ~concealed; BroomCloset.fabric_taken = true;
+        Take: give self ~concealed; BroomCloset.fabric_taken = true;
         ],
     has concealed;
 
@@ -161,42 +165,56 @@ Object BroomClosetDoor "broom closet door"
 
 Object Pub "Pub"
     with
-        description "The Red Anchor is a small establishment, providing drinkers the very basics - beer and a place to sit.  Still, it manages to keep open through hard times.  The barman keeps his ear to the ground as a favour for the local police, although what he gets in return you've still not got to the bottom of.  Steps lead down to the cellar, and east leads to a bathroom.",
+        description [;
+            if (self hasnt visited)
+            {
+                print "As you step out the broom closet, the barman rushes over, ~Took yer bleedin' time didn't you, getting slow in yer old age~, he chuckles, before nearly coughing up a lung.  ~Well listen, I don't have time to be helping you on your feet, this damn beer pump is on the blink again.  Suffice it to say they're after you over the station again~.  Having said his piece, he returns to fiddling with a beer pump.^^";
+            }
+            "The pub itself is a small establishment, providing drinkers the very basics - beer and a place to sit.  Still, it manages to keep open through hard times.  The barman keeps his ear to the ground as a favour for the local police, although what he gets in return you've still not got to the bottom of.  Steps lead down to the cellar, and east leads to a bathroom.";
+        ],
         w_to BroomClosetDoor,
         e_to Bathroom,
         ! n_to Street
         d_to Cellar
     has light;
 
+Object -> BeerPump "beer pump"
+       with name 'beer' 'pump',
+            description "A standard beer pump.  It's seen better days, but so has the rest of the place.",
+       has  scenery;
+
 Object -> barman "barman"
 with   parse_name [ i;
          while(NextWord() == 'barman' or 'bartender' or 'bartend' or 'man' or 'waiter') i++;
          return i;
-       ],
-        description "A barman stands here, polishing glasses.",
+        ],
+        description [;
+           if (Pipe.workingFlag==1)
+           {
+             "The barman stands here, polishing glasses.";
+           }
+           else
+           {
+             "The barman is here, alternately pulling at the beer pump, followed by swearing.";
+           }
+        ],
         life [;
-         Answer: "The barman seems uninterested and continues
-            polishing his glasses.";
+         Answer: "The barman seems uninterested and continues polishing his glasses.";
          Ask: switch (second)
          {
-          'knife' : "The barman looks up at the clock. ~That thing's
-             been here long before I have, no real idea where it
-             came from.~";
-          'painting', 'picture' : "A sad expression fills the
-             barman's face. ~I asked the previous owner myself about
-             that picture. Haunting ain't it? Apparently a ship got
-             into some kind of trouble not far from here. Turned out
-             it went down with all hands on deck. All rather
-             depressing really.~";
-          'policeman' : "The barman looks towards the door. ~The
-             old lighthouse? It's not been used for years as far as
-             I know.~";
-          'cellar' : "Damn thing!";
-          'glass' : "The barman gives you a funny look. ~Er, people
-             usually drink from them.~";
+          'knife' : "~Beautiful thing ain't it? The Inspector'll be real keen on getting it back though I'd imagine?~";
+          'policeman', 'police', 'inspector' : "The barman looks towards the door. ~I reckon something serious must've happened if they've got you out of hiding.~";
+          'bathroom', 'toilet' : "Yeah, a bit grim but what can I say?  Most folk come here for the beer right?";
+          'beer' : "~Well OK, it might not be the best in town but I don't get many complaints.~";
+          'cellar', 'cask' : "~Always something going wrong in that cellar, couple of customers even say they've seen rats down there, but I don't believe 'em!~";
          }
         ],
  has    animate;
+
+Object Coat "coat"
+       with name 'coat',
+            description "The classic mac",
+       has clothing;
 
 Object Bathroom "Pub bathroom"
     with
@@ -207,12 +225,17 @@ Object Bathroom "Pub bathroom"
 Object -> Toilet "toilet"
     with name 'toilet' 'bog',
          description "Looking at this rather sorry piece of porcelain, you're glad you no longer have the need to use it.",
-    has scenery container;
+    has scenery container open;
 
 Object -> Sink "sink"
     with name 'sink',
          description "The sink is just about visible underneath the grime built up around it.  No plug of course, but that's probably for the best.",
-    has scenery container;
+    has scenery container open;
+
+!Object -> -> Sunglasses "sunglasses"
+!    with name 'sunglasses',
+!         description "sunglasses",
+!    has clothing;
 
 Object -> Mirror "mirror"
     with name 'mirror',
@@ -237,15 +260,37 @@ Object -> Cask "beer cask"
 
 Object -> Pipe "pipe"
     with name 'pipe',
-         description "The pipe connects this cask to the beer pumps up above.  It appears to have a small hole in it where beer is slowly leaking.",
-    has scenery;
+         description [;
+            print "The pipe connects this cask to the beer pumps up above.  ";
+            if (self.workingFlag==1)
+            {
+              "Some bandages are securely fixed to the pipe, stopping the leak.";
+            }
+            else
+            {
+              "It appears to have a small hole in it where beer is slowly leaking.";
+            }
+         ],
+         before [;
+         Receive:
+            if (noun==PileOfFabric)
+            {
+                move PileOfFabric to Pipe;
+                self.workingFlag=1;
+                score++;
+                "You attach the fabric to the pipe, which stops the leak.";
+            }
+            "Interesting concept!";
+         ],
+        workingFlag 0,
+    has scenery supporter;
 
 Object -> MouseHole "mouse hole"
    with name 'mouse' 'hole',
         description "Above the mouse hole someone has inscribed 'Bliz & Nibs'.",
    has scenery container open;
 
-!Not sure yet
+!Not sure yet, perhaps just a bonus point?
 !Object -> -> PyramidCharm "Pyramid Charm"
 !   with name 'pyramid' 'charm',
 !        description "A polished jade charm of a pyramid";
@@ -274,3 +319,4 @@ Object -> MouseHole "mouse hole"
 ];
 
 Extend 'look' * 'under' noun -> LookUnder;
+Verb 'wrap' * held 'around' / 'on' noun -> PutOn;
