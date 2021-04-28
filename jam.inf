@@ -147,7 +147,10 @@ Object BroomClosetDoor "broom closet door"
             w1 = NextWord(); w2 = NextWord(); w3 = NextWord();
             if(w1 == 'broom' && w2 == 'closet' && w3 == 'door') return 3;
             if(w1 == 'closet' && w2 == 'door') return 2;
-            if(w1 == 'door') return 1;
+            if (location == BroomCloset)
+            {
+                if(w1 == 'door') return 1;
+            }
         ],
         when_open [;
             if(self in BroomCloset)
@@ -178,10 +181,22 @@ Object Pub "Pub"
         d_to Cellar
     has light;
 
-Object  -> PubDoor "pub door"
- with   name 'pub' 'door',
+Object  -> PubDoor "pub door" !name 'pub' 'door',
+ with   !name 'pub' 'door', 
+        parse_name [ w1 w2;
+            w1 = NextWord(); w2 = NextWord();
+            if(w1 == 'pub' && w2 == 'door') return 2;
+            if (location == Pub)
+            {
+                if (w1 == 'door')
+                {
+                    print "(Assuming pub door) ";
+                    return 1;
+                }
+            }
+        ],
         description [;
-            print "The pub door keeps the riff-raff out";
+            print "The pub door keeps the elements out";
             if (self has locked)
             {
                 ", and currently locks you in.";
@@ -190,6 +205,12 @@ Object  -> PubDoor "pub door"
             {
                 ".";
             }
+        ],
+        before [;
+          UnlockWithoutKey:
+            "Todo!";
+            !if (TestScope(cupboard_key))
+            !  <<Unlock self cupboard_key>>;
         ],
         door_to OutsidePub,
         door_dir n_to,
@@ -335,7 +356,13 @@ Object -> MouseHole "mouse hole"
   "You find nothing unexpected.";
 ];
 
+[ UnlockWithoutKeySub;
+  "You would need to specify which key to use, like ~unlock door with blue key~.";
+];
+
 Extend 'look' * 'under' noun -> LookUnder;
+Extend 'unlock' first * noun -> UnlockWithoutKey;
+
 Verb 'wrap' * held 'around' / 'on' noun -> PutOn;
 
 Include ">street.inf";
