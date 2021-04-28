@@ -17,7 +17,7 @@ all: $(GAME_PUNY)
 run:
 	$(FROTZ_EXE) $(GAME_PUNY)
 
-$(GAME_PUNY): jam.inf
+$(GAME_PUNY): jam.inf street.inf station.inf graveyard.inf
 	$(INFORM) $(PUNY_FLAGS) +$(PUNY_LIB) jam.inf
 
 clean:

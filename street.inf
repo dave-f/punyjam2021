@@ -2,7 +2,20 @@
 ! 
 ! River [Boat man] | Street 1 | Street 2 | Street 3 | Graveyard
 
-Object OutsidePub "Outside the Pub",
+Object OutsidePub "Outside the Pub"
        with description "Outside the pub",
+       e_to PubEast,
+       w_to PubWest,
        s_to Pub,
+       has light;
+
+Object PubWest "River bank"
+       with description "This river bank has a man in a boat.",
+       e_to OutsidePub,
+       has light;
+
+Object PubEast "Street"
+       with description "A street",
+       n_to PoliceStation,
+       w_to OutsidePub,
        has light;

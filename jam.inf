@@ -175,6 +175,16 @@ Object Pub "Pub"
             }
             "The pub itself is a small establishment, providing drinkers the very basics - beer and a place to sit.  Still, it manages to keep open through hard times.  The barman keeps his ear to the ground as a favour for the local police, although what he gets in return you've still not got to the bottom of.  Steps lead down to the cellar, east leads to a bathroom, while to the north is the door out.";
         ],
+        initial [;
+            if ((~~Barman.givenFlag) && (Pipe.workingFlag==1))
+            {
+                Barman.givenFlag = 1;
+                move Coat to location;
+                move Hat to location;
+                give PubDoor ~locked;
+                "As you return to the bar, it's apparent the mood of the barman is much improved.  ~Dunno what you've been doing down there, but it's certainly got this beer flowing!~ he exclaims, before hurridly rushing to the front door to unlock it.  ~By the way, don't forget the gear, old chap~,  he says, and throws over a coat and hat.^";
+            }
+        ],
         w_to BroomClosetDoor,
         e_to Bathroom,
         n_to PubDoor,
@@ -207,10 +217,8 @@ Object  -> PubDoor "pub door" !name 'pub' 'door',
             }
         ],
         before [;
-          UnlockWithoutKey:
-            "Todo!";
-            !if (TestScope(cupboard_key))
-            !  <<Unlock self cupboard_key>>;
+          UnlockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
+          LockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
         ],
         door_to OutsidePub,
         door_dir n_to,
@@ -221,7 +229,7 @@ Object -> BeerPump "beer pump"
             description "A standard beer pump.  It's seen better days, but so has the rest of the place.",
        has  scenery;
 
-Object -> barman "barman"
+Object -> Barman "barman"
 with   parse_name [ i;
          while(NextWord() == 'barman' or 'bartender' or 'bartend' or 'man' or 'waiter') i++;
          return i;
@@ -247,11 +255,17 @@ with   parse_name [ i;
           'cellar', 'cask' : "~Always something going wrong in that cellar, couple of customers even say they've seen rats down there, but I don't believe 'em!~";
          }
         ],
+        givenFlag 0,
  has    animate;
 
-Object Coat "coat"
-       with name 'coat',
-            description "The classic mac",
+Object Coat "raincoat"
+       with name 'rain' 'coat' 'raincoat' 'mac',
+            description "The classic Mackintosh style coat, chosen as it covers a significant part of your body, and waterproof.",
+       has clothing;
+
+Object Hat "hat"
+       with name 'hat',
+            description "A rather smart felt bowler hat.  Coupled with the coat, makes a half-convincing disguise to the casual passer-by.",
        has clothing;
 
 Object Bathroom "Pub bathroom"
@@ -267,13 +281,16 @@ Object -> Toilet "toilet"
 
 Object -> Sink "sink"
     with name 'sink',
-         description "The sink is just about visible underneath the grime built up around it.  No plug of course, but that's probably for the best.",
+         description "The sink is just about visible underneath the grime built up around it.  No plug of course, but that's probably for the best.^",
+         after [;
+             Examine: <Search self>;
+         ],
     has scenery container open;
 
-!Object -> -> Sunglasses "sunglasses"
-!    with name 'sunglasses',
-!         description "sunglasses",
-!    has clothing;
+Object -> -> Sunglasses "sunglasses"
+    with name 'sun' 'glasses' 'sunglasses',
+         description "The sunglasses are plastic and look cheap, perhaps discarded after a night of revelry.",
+    has clothing pluralname;
 
 Object -> Mirror "mirror"
     with name 'mirror',
@@ -281,7 +298,8 @@ Object -> Mirror "mirror"
     has scenery;
 
 Object Cellar "Beer cellar"
-    with description "Cellar seems a somewhat grand choice of word for this small cramped area.  It's a tiny underground area with a pungent smell of beer.  Steps lead back up to the pub.",
+    with name 'feet',
+         description "Cellar seems a somewhat grand choice of word for this small cramped area.  It's a tiny underground area with a pungent smell of beer.  Steps lead back up to the pub.",
     u_to Pub,
   has light;
 
@@ -323,8 +341,29 @@ Object -> Pipe "pipe"
         workingFlag 0,
     has scenery supporter;
 
+Object -> Hole "hole"
+    with name 'hole',
+         description [;
+           if (Pipe.workingFlag==1)
+           {
+               "The hole has been sealed by some securely-fixed bandages.";
+           }
+           else
+           {
+               "The hole is small, but it is definitely causing a leak.";
+           }
+         ],
+         before [;
+         Receive:
+           if (noun==PileOfFabric)
+           {
+              <<PutOn PileOfFabric Pipe>>;
+           }
+         ],
+     has scenery container open;
+
 Object -> MouseHole "mouse hole"
-   with name 'mouse' 'hole',
+   with name 'mousehole',
         description "Above the mouse hole someone has inscribed 'Bliz & Nibs'.",
    has scenery container open;
 
@@ -347,6 +386,10 @@ Object -> MouseHole "mouse hole"
 ! ------
 
 [Initialise;
+
+    !Debug stuff
+    !give PubDoor ~locked;
+
     print "^^With the familiar crackle you come into being once more.  Consciousness thrills you, and you take a moment enjoying what it feels like to exist, before your thoughts turn to why you are needed ...^^";!
 ];
 
@@ -357,12 +400,19 @@ Object -> MouseHole "mouse hole"
 ];
 
 [ UnlockWithoutKeySub;
-  "You would need to specify which key to use, like ~unlock door with blue key~.";
+  "You would need to specify which key to use, like ~unlock door with rusty key~.";
 ];
+
+[ LockWithoutKeySub;
+  "You would need to specify which key to use, like ~lock door with rusty key~.";
+];  
 
 Extend 'look' * 'under' noun -> LookUnder;
 Extend 'unlock' first * noun -> UnlockWithoutKey;
+Extend 'lock' first * noun -> LockWithoutKey;
 
 Verb 'wrap' * held 'around' / 'on' noun -> PutOn;
 
 Include ">street.inf";
+Include ">station.inf";
+Include ">graveyard.inf";

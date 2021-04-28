@@ -1,1 +1,6 @@
 ! police station
+
+Object PoliceStation
+       with description "Police Station",
+       s_to PubEast,
+       has light;
