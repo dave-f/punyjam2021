@@ -34,7 +34,9 @@ Object  -> boat "wooden boat"
                 rtrue;
             }
 
-            new_line;
+            score++;
+            !new_line;
+            deadflag=2; ! Currently won, but this isn't the end
             rtrue;
         ],
 #Iftrue 0;

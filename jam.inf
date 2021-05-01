@@ -42,6 +42,8 @@ Constant OPTIONAL_SIMPLE_DOORS;
 ! Define any library constants you need here, like MAX_SCORE, AMUSING_PROVIDED,
 ! MAX_CARRIED, SACK_OBJECT,  etc.
 
+Constant MAX_SCORE 3;
+
 Constant INITIAL_LOCATION_VALUE = BroomCloset;
 
 ! Define your own global variables here, if any
