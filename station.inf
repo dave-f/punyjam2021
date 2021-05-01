@@ -46,7 +46,11 @@ with   parse_name [ i;
          };
          Show: if (noun==note)
          {
-            <<Ask Inspector 'note'>>;
+             <<Ask Inspector 'note'>>;
+         }
+         else if (noun==Knife)
+         {
+             <<Ask Inspector 'knife'>>;
          }
          Give: if (noun==Knife)
          {

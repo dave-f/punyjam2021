@@ -105,7 +105,7 @@ Object -> Note "note"
     with
         name 'note',
         initial "A note has been fixed to the wall with a knife.",
-        description "The note appears to have been written in a hurry.  It reads: 'Glad you could join us again - don't have time to get the details down, suffice it to say it looks like it's happening again.  I'm getting some real heat on this one and could really use some help.   I'll be waiting down the station when you're ready - mind how yer go.'",
+        description "The note appears to have been written in a hurry.  It reads: 'Glad you could join us again - don't have time to get the details down, suffice it to say I'm getting some real heat on this one and could use some help.   I'll be waiting down the station when you're ready - mind how yer go.'",
         after [;
             Take:
                 if(Knife hasnt moved && self hasnt general) {
