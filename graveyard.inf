@@ -1,16 +1,12 @@
 ! graveyard
 
 Object  GraveyardGate "graveyard gate"
- with   name 'graveyard' 'gate', 
+ with   name 'iron' 'graveyard' 'gate', 
         description [;
-            print "This grand iron gate towers over you.";
+            print "The grand iron gate towers over you.  Through the gate you can see the path splits north and south, taking different routes around the graveyard.";
             if (self has locked)
             {
-                ".  It is currently locked..";
-            }
-            else
-            {
-                ".";
+                "  It is currently locked.";
             }
         ],
 #Iftrue 0;
@@ -21,4 +17,14 @@ Object  GraveyardGate "graveyard gate"
 #Endif;
         found_in PubEast,
         door_dir (e_to), ! s_to) (n_to),
- has    door openable lockable locked; ! scenery?
+ has    door openable lockable locked scenery;
+
+! TODO
+
+Object InsideGraveyard
+       with description "Other side of the gate.",
+       has light;
+
+Object -> BirdBath
+       with description "An ornamental bird bath.",
+       has container;

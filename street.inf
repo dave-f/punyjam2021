@@ -1,6 +1,6 @@
 ! street
 ! 
-! River [Boat man] | Street 1 | Street 2 | Graveyard
+! River [Boat] | Street 1 | Street 2 | Graveyard
 
 Object OutsidePub "Outside the Pub"
        with description "Standing just outside the pub you notice the street is eerily deserted.  A lamppost stands proudly outside the pub serving as a sort of beacon, but otherwise takes your eye.  The street runs east to west and south leads back into the pub.",
@@ -59,14 +59,15 @@ Object  -> boat "wooden boat"
  has    static enterable container open;
 
 Object PubEast "Street"
-       with description "The street continues to run east to west.  North leads into the police station, and a graveyard is east.",
-       n_to PoliceStation,
+       with name 'steps' 'pillar' 'door',
+            description "The rather quiet street continues here, where it stops in front of a huge graveyard, fronted by a large iron gate.  Steps lead north into the Police Station, east leads into the Graveyard and west leads back to the pub.",
+       n_to InsideStation,
        e_to GraveyardGate,
        w_to OutsidePub,
        has light;
 
-Object PoliceStation "police station"
+Object -> PoliceStation
        with name 'police' 'station',
-            description "A building.",
-            s_to PubEast,
-       has light;
+             description "The Station is a rather large building, with steps leading north into it.  Concrete pillars line either side of the door and above those it reads POLICE STATION.",
+       has scenery;
+
