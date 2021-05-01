@@ -5,11 +5,19 @@
 Object OutsidePub "Outside the Pub"
        with description "Standing just outside the pub you notice the street is eerily deserted.  A lamppost stands proudly outside the pub serving as a sort of beacon, but otherwise takes your eye.  The street runs east to west and south leads back into the pub.",
             after [;
-                  Go: if ((Coat hasnt worn) || (Hat hasnt worn))
-                      { 
-                          print "A passer-by walks past just as you are on the street.  He goes into an immediate panic, shouting ~It's not natural!~ and beats you to death with his walking stick.";
-                          deadflag=true;
-                          return 1; 
+                  Go: if (random(100) <= 10)
+                      {
+                          if ((Coat hasnt worn) || (Hat hasnt worn))
+                          {
+                              print "A passer-by walks past just as you are on the street.  He goes into an immediate panic, shouting ~It's not natural!~ and beats you to death with his walking stick.";
+                              deadflag=true;
+                              return 1;
+                          }
+                          else
+                          {
+                              print "A passer-by walks past, glancing over briefly before shaking his head and walking off.^^";
+                              return 0;
+                          }
                       }
             ],
        e_to PubEast,
