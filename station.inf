@@ -44,6 +44,10 @@ with   parse_name [ i;
           'note'  : "~Ah yes, down to business...~ he says, before looking around and leaning forward slightly.  ~We've had a few deaths lately, but there's something about the more recent ones that's got someone all antsy.  Some sort of pattern to it all, they reckon.  Anyway, we need your special... ahem... power, so we can try and communicate with the recently deceased.  Anyway, we've just buried the last one, so if you get to the graveyard sharpish you can hopefully still get through to him.~";
           'pub'   : "~Not too great on the decor there I grant you, but the fella running the place keeps an ear out for us, and has given us a good many tip-offs.  Sorry about the Broom Closet business I was in a bit of a rush.  I'm sure there's better places to be summoned to.~";
          };
+         Show: if (noun==note)
+         {
+            <<Ask Inspector 'note'>>;
+         }
          Give: if (noun==Knife)
          {
              remove knife;
