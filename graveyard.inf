@@ -1,1 +1,24 @@
 ! graveyard
+
+Object  GraveyardGate "graveyard gate"
+ with   name 'graveyard' 'gate', 
+        description [;
+            print "This grand iron gate towers over you.";
+            if (self has locked)
+            {
+                ".  It is currently locked..";
+            }
+            else
+            {
+                ".";
+            }
+        ],
+#Iftrue 0;
+        before [;
+          UnlockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
+          LockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
+        ],
+#Endif;
+        found_in PubEast,
+        door_dir (e_to), ! s_to) (n_to),
+ has    door openable lockable locked; ! scenery?
