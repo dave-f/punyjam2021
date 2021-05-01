@@ -1,1 +1,70 @@
 ! police station
+
+Object InsideStation "Police Station"
+       with name 'chair' 'chairs' 'steps' 'wall',
+            description "Inside the police station is rather less grand than the outside would have you believe.  Chairs line the back wall, and you stand in front of the counter.  A painting hangs over the back wall.",
+            s_to PubEast,
+            d_to Crypt,
+        before [;
+        Go:
+            if (selected_direction==d_to)
+            {
+                print "The Inspector stands in your way shaking his finger.  ~No time for that yet old bean, sooner we get this sorted the better~.^";
+                return 2;
+            }
+       ],
+       has light;
+
+Object -> Counter "counter"
+       with name 'counter',
+            description "The counter stands tall and separates you from the Inspector.  Behind it steps lead downwards.",
+       has scenery;
+
+!Object -> Bell
+!       with name 'bell',
+!       has scenery; ! Can ring this later on in the game?
+
+Object -> Painting "painting"
+       with name 'painting' 'picture',
+            description "The painting depicts a fishing ship in trouble on a stormy sea.  You're sure you've seen it before somewhere.",
+       has scenery;
+
+Object -> Inspector "Inspector"
+with   parse_name [ i;
+         while(NextWord() == 'inspector' or 'policeman' or 'police' or 'copper' or 'cop' or 'man') i++;
+         return i;
+        ],
+        description "The Inspector stands here, looking anxious.",
+        life [;
+         Answer: "The inspector seems uninterested.";
+         Ask: switch (second)
+         {
+          'knife' : "~What a beauty eh?  I can't thank you enough for the help you've given us over the years.~";
+          'note'  : "~Ah yes, down to business; we've had a few murders lately, but there's something about these later ones that's got the boss all antsy.~";
+          'pub'   : "~Not too hot on the decor there I grant you, but the fella running the place keeps an ear out for us, and has given us a good many tip-offs.~";
+         };
+         Give: if (noun==Knife)
+         {
+             remove knife;
+             print "He looks pleased, yet anxious.  ~Lovely, thanks, will come in handy for next time - just hope you can get us out of this pickle!~^";
+             score++;
+             rtrue;
+         } 
+         else if (noun==Note)
+         {
+            remove note;
+            <<Ask Inspector 'note'>>;
+         }
+         "The inspector looks confused.";
+        ],
+ has    animate;
+
+! TODO
+
+Object Crypt "crypt"
+      with description "",
+      has light;
+
+Object -> Sarcophagus
+       with description "",
+       has container;
