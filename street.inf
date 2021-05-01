@@ -4,6 +4,14 @@
 
 Object OutsidePub "Outside the Pub"
        with description "Standing just outside the pub you notice the street is eerily deserted.  A lamppost stands proudly outside the pub serving as a sort of beacon, but otherwise takes your eye.  The street runs east to west and south leads back into the pub.",
+            after [;
+                  Go: if ((Coat hasnt worn) || (Hat hasnt worn))
+                      { 
+                          print "A passer-by walks past just as you are on the street.  He goes into an immediate panic, shouting ~It's not natural!~ and beats you to death with his walking stick.";
+                          deadflag=true;
+                          return 1; 
+                      }
+            ],
        e_to PubEast,
        w_to PubWest,
        s_to PubDoor,
@@ -29,7 +37,7 @@ Object  -> boat "wooden boat"
 
             if (~~(Sunglasses has worn))
             {
-                print " As you do so, you are dazzled by the sunlight out on the water, and lose your footing, causing you to fall into the water, which as you are all to aware will prove deadly.";
+                print " As you do so, you are dazzled by the sunlight out on the water, and lose your footing, causing you to fall into the water, which as you are all too aware will prove deadly.";
                 deadflag=true;
                 rtrue;
             }

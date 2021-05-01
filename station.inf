@@ -68,3 +68,13 @@ Object Crypt "crypt"
 Object -> Sarcophagus
        with description "",
        has container;
+
+Object -> MouseHole "mouse hole"
+   with name 'mouse' 'hole',
+        description "Above the mouse hole someone has inscribed 'Bliz & Nibs'.",
+   has scenery container open;
+
+!Not sure yet, perhaps just a bonus point?
+!Object -> -> PyramidCharm "Pyramid Charm"
+!   with name 'pyramid' 'charm',
+!        description "A polished jade charm of a pyramid";

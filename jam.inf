@@ -302,7 +302,7 @@ Object -> Mirror "mirror"
     has scenery;
 
 Object Cellar "Beer cellar"
-    with name 'feet',
+    with name 'feet' 'leak',
          description "Cellar seems a somewhat grand choice of word for this small cramped area.  It's a tiny underground area with a pungent smell of beer.  Steps lead back up to the pub.",
     u_to Pub,
   has light;
@@ -366,16 +366,6 @@ Object -> Hole "hole"
          ],
      has scenery container open;
 
-Object -> MouseHole "mouse hole"
-   with name 'mousehole',
-        description "Above the mouse hole someone has inscribed 'Bliz & Nibs'.",
-   has scenery container open;
-
-!Not sure yet, perhaps just a bonus point?
-!Object -> -> PyramidCharm "Pyramid Charm"
-!   with name 'pyramid' 'charm',
-!        description "A polished jade charm of a pyramid";
-
 ! ------------------------------ Street ------------------------------
 
 
@@ -392,7 +382,8 @@ Object -> MouseHole "mouse hole"
 [Initialise;
 
     !Debug stuff
-    give PubDoor ~locked;
+    !give PubDoor ~locked;
+    !move Note to player;
 
     print "^^With the familiar crackle you come into being once more.  Consciousness thrills you, and you take a moment enjoying what it feels like to exist, before your thoughts turn to why you are needed ...^^";!
 ];
