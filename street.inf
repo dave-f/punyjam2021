@@ -1,21 +1,70 @@
 ! street
 ! 
-! River [Boat man] | Street 1 | Street 2 | Street 3 | Graveyard
+! River [Boat man] | Street 1 | Street 2 | Graveyard
 
 Object OutsidePub "Outside the Pub"
-       with description "Outside the pub",
+       with description "Standing just outside the pub you notice the street is eerily deserted.  A lamppost stands proudly outside the pub serving as a sort of beacon, but otherwise takes your eye.  The street runs east to west and south leads back into the pub.",
        e_to PubEast,
        w_to PubWest,
-       s_to Pub,
+       s_to PubDoor,
        has light;
 
+Object -> LampPost
+       with name 'lamp' 'post',
+            description "The lamppost is made of decorative iron with a round lamp at the top.  It provides lighting for people who may be a little unsure on their feet after coming out the pub.",
+       has scenery;
+
 Object PubWest "River bank"
-       with description "This river bank has a man in a boat.",
+       with description "The road ends abruptly here to form a small river bank.  The river itself looks calm and runs gently south, however the sunlight is particularly dazzling off the water.",
        e_to OutsidePub,
        has light;
 
+Object  -> boat "wooden boat"
+ with   name 'wooden' 'boat',
+        initial "A small wooden boat bobs about on the water.",
+        description "Presumably once used for recreational purposes, this boat now looks a little worse for wear, although it remains afloat.",
+        after [;
+         Enter:
+            print "You step cautiously into the boat.";
+
+            if (~~(Sunglasses has worn))
+            {
+                print " As you do so, you are dazzled by the sunlight out on the water, and lose your footing, causing you to fall into the water, which as you are all to aware will prove deadly.";
+                deadflag=true;
+                rtrue;
+            }
+
+            new_line;
+            rtrue;
+        ],
+#Iftrue 0;
+        before [;
+         Go:
+            if (selected_direction==s_to && real_location==boating_lake)
+            {
+                return 1;
+            }
+            else if (selected_direction==n_to && real_location==island_tip)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        ],
+#EndIf;
+ has    static enterable container open;
+
 Object PubEast "Street"
-       with description "A street",
+       with description "The street continues to run east to west.  North leads into the police station, and a graveyard is east.",
        n_to PoliceStation,
+       e_to GraveyardGate,
        w_to OutsidePub,
+       has light;
+
+Object PoliceStation "police station"
+       with name 'police' 'station',
+            description "A building.",
+            s_to PubEast,
        has light;

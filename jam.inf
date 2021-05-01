@@ -196,7 +196,7 @@ Object  -> PubDoor "pub door" !name 'pub' 'door',
         parse_name [ w1 w2;
             w1 = NextWord(); w2 = NextWord();
             if(w1 == 'pub' && w2 == 'door') return 2;
-            if (location == Pub)
+            if (location == Pub || location == OutsidePub)
             {
                 if (w1 == 'door')
                 {
@@ -220,8 +220,10 @@ Object  -> PubDoor "pub door" !name 'pub' 'door',
           UnlockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
           LockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
         ],
-        door_to OutsidePub,
-        door_dir n_to,
+        !door_to OutsidePub,
+        !door_dir n_to,
+        found_in Pub OutsidePub,
+        door_dir (s_to) (n_to),
  has    scenery door openable lockable locked;
 
 Object -> BeerPump "beer pump"
@@ -388,7 +390,7 @@ Object -> MouseHole "mouse hole"
 [Initialise;
 
     !Debug stuff
-    !give PubDoor ~locked;
+    give PubDoor ~locked;
 
     print "^^With the familiar crackle you come into being once more.  Consciousness thrills you, and you take a moment enjoying what it feels like to exist, before your thoughts turn to why you are needed ...^^";!
 ];
