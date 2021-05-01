@@ -24,6 +24,11 @@ Object -> Counter "counter"
 !       with name 'bell',
 !       has scenery; ! Can ring this later on in the game?
 
+Object -> WalkingStick "walking stick"
+          with name 'walking' 'stick',
+               initial "A walking stick has been left by the chairs on the back wall.",
+               description "The walking stick is of the classic design; wooden and straight, with a hook at the top.";
+
 Object -> Painting "painting"
        with name 'painting' 'picture',
             description "The painting depicts a fishing ship in trouble on a stormy sea.  You're sure you've seen it before somewhere.",
