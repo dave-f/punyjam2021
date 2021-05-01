@@ -34,14 +34,15 @@ with   parse_name [ i;
          while(NextWord() == 'inspector' or 'policeman' or 'police' or 'copper' or 'cop' or 'man') i++;
          return i;
         ],
+        article "an",
         description "The Inspector stands here, looking anxious.",
         life [;
          Answer: "The inspector seems uninterested.";
          Ask: switch (second)
          {
           'knife' : "~What a beauty eh?  I can't thank you enough for the help you've given us over the years.~";
-          'note'  : "~Ah yes, down to business; we've had a few murders lately, but there's something about these later ones that's got the boss all antsy.~";
-          'pub'   : "~Not too hot on the decor there I grant you, but the fella running the place keeps an ear out for us, and has given us a good many tip-offs.~";
+          'note'  : "~Ah yes, down to business...~ he says, before looking around and leaning forward slightly.  ~We've had a few deaths lately, but there's something about the more recent ones that's got someone all antsy.  Some sort of pattern to it all, they reckon.  Anyway, we need your special... ahem... power, so we can try and communicate with the recently deceased.  Anyway, we've just buried the last one, so if you get to the graveyard sharpish you can hopefully still get through to him.~";
+          'pub'   : "~Not too great on the decor there I grant you, but the fella running the place keeps an ear out for us, and has given us a good many tip-offs.  Sorry about the Broom Closet business I was in a bit of a rush.  I'm sure there's better places to be summoned to.~";
          };
          Give: if (noun==Knife)
          {
