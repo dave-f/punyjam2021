@@ -3,7 +3,8 @@
 ! River [Boat] | Street 1 | Street 2 | Graveyard
 
 Object OutsidePub "Outside the Pub"
-       with description "Standing just outside the pub you notice the street is eerily deserted.  A lamppost stands proudly outside the pub serving as a sort of beacon, but otherwise takes your eye.  The street runs east to west and south leads back into the pub.",
+       with name 'pub',
+            description "Standing just outside the pub you notice the street is eerily deserted.  A lamppost stands proudly outside the pub serving as a sort of beacon, but otherwise takes your eye.  The street runs east to west and south leads back into the pub.",
             after [;
                   Go: if (random(100) <= 10)
                       {
@@ -27,21 +28,48 @@ Object OutsidePub "Outside the Pub"
 
 Object -> LampPost
        with name 'lamp' 'post',
-            description "The lamppost is made of decorative iron with a round lamp at the top.  It provides lighting for people who may be a little unsure on their feet after coming out the pub.",
+            description "The lamp post is made of decorative iron with a round lamp at the top.  It provides lighting for people who may be a little unsure on their feet after coming out the pub.",
        has scenery;
 
 Object PubWest "River bank"
        with description "The road ends abruptly here to form a small river bank.  The river itself looks calm and runs gently south, however the sunlight is particularly dazzling off the water.",
        e_to OutsidePub,
+       s_to [;
+            if (player in Boat) ! && oar in player)
+            {
+                if (false) ! self.monster_present==true)
+                {
+                    deadflag=true;
+                }
+                else
+                {
+                    print "You encourage the boat gently south.^^";
+                    return(SouthRiver);
+                }
+            }
+            else
+            {
+                "You would need to be in the boat.";
+            }
+       ],
        has light;
 
-Object  -> boat "wooden boat"
+Object  -> Boat "wooden boat"
  with   name 'wooden' 'boat',
-        initial "A small wooden boat bobs about on the water.",
+        initial [;
+            if (~~(player in boat))
+            {
+                "A small wooden boat bobs about on the water.";
+            }
+            else
+            {
+                "You nervously bob about in the boat.";
+            }
+        ],
         description "Presumably once used for recreational purposes, this boat now looks a little worse for wear, although it remains afloat.",
         after [;
          Enter:
-            print "You step cautiously into the boat.";
+            print "You step cautiously into the boat.^";
 
             if (~~(Sunglasses has worn))
             {
@@ -50,19 +78,23 @@ Object  -> boat "wooden boat"
                 rtrue;
             }
 
-            score++;
+            if (self.scoreAwarded==0)
+            {
+                score++;
+                self.scoreAwarded=1;
+            }
+
             !new_line;
-            deadflag=2; ! Currently won, but this isn't the end
+            !deadflag=2;
             rtrue;
         ],
-#Iftrue 0;
         before [;
          Go:
-            if (selected_direction==s_to && real_location==boating_lake)
+            if (selected_direction==s_to && real_location==PubWest)
             {
                 return 1;
             }
-            else if (selected_direction==n_to && real_location==island_tip)
+            else if (selected_direction==n_to && real_location==SouthRiver)
             {
                 return 1;
             }
@@ -71,8 +103,36 @@ Object  -> boat "wooden boat"
                 return 0;
             }
         ],
-#EndIf;
+        scoreAwarded 0,
  has    static enterable container open;
+
+Object SouthRiver "South on the river"
+       with description "South on the river the reeds are getting thicker",
+       n_to [;
+            if (player in Boat) ! && oar in player)
+            {
+                if (false) ! self.monster_present==true)
+                {
+                    deadflag=true;
+                }
+                else
+                {
+                    print "You encourage the boat gently north.^^";
+                    return(PubWest);
+                }
+            }
+            else
+            {
+                "You would need to be in the boat.";
+            }
+       ],
+       e_to Clearing,
+       has light;
+
+Object Clearing "A clearing",
+       with description "A tree, birds nest etc.",
+       w_to SouthRiver,
+       has light;
 
 Object PubEast "Street"
        with name 'steps' 'pillar' 'door',
@@ -87,3 +147,10 @@ Object -> PoliceStation
              description "The Station is a rather large building, with steps leading north into it.  Concrete pillars line either side of the door and above those it reads POLICE STATION.",
        has scenery;
 
+Object -> RustyKey "rusty key"
+       with name 'rusty' 'key',
+            description "a rusty key.",
+            before [;
+            Take: "The rusty key is out of reach.";
+            ],
+       has concealed;
