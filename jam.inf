@@ -400,9 +400,18 @@ Object -> Hole "hole"
 
 [ LockWithoutKeySub;
   "You would need to specify which key to use, like ~lock door with rusty key~.";
-];  
+];
+
+[ GetOutBoatSub;
+    if (player in Boat)
+    {
+        <<Exit>>;
+    }
+    "You're not in a boat!";
+];
 
 Extend 'look' * 'under' noun -> LookUnder;
+Extend 'get' first * 'out' 'boat' -> GetOutBoat;
 Extend 'unlock' first * noun -> UnlockWithoutKey;
 Extend 'lock' first * noun -> LockWithoutKey;
 
