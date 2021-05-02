@@ -175,6 +175,7 @@ Object -> Nest "Birds nest",
                       {
                           print "Bullseye! The nest completely smashes (albeit with a rather satisfying sound), and something falls to the floor.";
                           move magnet to location;
+                          move noun to location;
                           remove nest;
                           score++;
                           rtrue;
@@ -202,11 +203,3 @@ Object -> PoliceStation
        with name 'police' 'station',
              description "The Station is a rather large building, with steps leading north into it.  Concrete pillars line either side of the door and above those it reads POLICE STATION.",
        has scenery;
-
-Object -> RustyKey "rusty key"
-       with name 'rusty' 'key',
-            description "a rusty key.",
-            before [;
-            Take: "The rusty key is out of reach.";
-            ],
-       has concealed;

@@ -8,32 +8,79 @@ Object  GraveyardGate "graveyard gate"
             {
                 print "  It is currently locked.";
             }
-            if (self.gotKey==0)
+            if (IronKey in KeyHook)
             {
-                "  Just through the gate you can see a key.";
+                "  You notice on the other side of the gate there's a key on a hook.";
             }
+            new_line;
         ],
-#Iftrue 0;
         before [;
-          UnlockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
-          LockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
+        Unlock: if (second==IronKey)
+                { 
+                  if (self has open) 
+                  {
+                     "You would need to close the gate first.";
+                  }
+                  else
+                  {
+                    give self ~locked; "The key fits nicely, and unlocks the gate."; 
+                  }
+                } 
+                else { "It doesn't seem to fit."; }
+        Lock: if (second==IronKey) 
+              {
+                if (self has open)
+                {
+                    "You would need to close the gate first.";
+                }
+                else
+                {
+                    give self locked;
+                    "You lock the gate.";
+                } 
+              }
+              else { "It doesn't seem to fit."; }
         ],
-#Endif;
-        found_in PubEast,
-        door_dir (e_to),
+        found_in PubEast InsideGraveyard,
+        door_dir (e_to) (w_to),
         gotKey 0,
  has    door openable lockable locked scenery;
 
-! TODO
-
-Object InsideGraveyard
-       with description "Other side of the gate.",
+Object InsideGraveyard "Inside the Graveyard"
+       with description "Standing at the entrance you get an idea of the size of the graveyard, with paths leading north and south to different areas.  An ornamental bird bath stands in the centre here, and just by the gate is the key hook.",
+            after [;
+             Go: print "Accessing the graveyard you start to feel your senses coming alive, and have reached the end of this part of the adventure! Congratulations!"; deadflag=2; rtrue;
+       ],
+       w_to PubEast, ! TODO n_to and s_to
        has light;
 
-Object -> BirdBath
-       with description "The ornamental bird bath is a stone cherub holding a dish, which gathers water for the birds when it rains.",
-       has container;
+Object -> BirdBath "bird bath"
+       with name 'bird' 'bath',
+            description "The ornamental bird bath is a stone cherub holding a dish, which gathers water for the birds when it rains.",
+       has scenery;
 
-Object -> KeyHook
-       with description "key hook",
-       has supporter;
+Object KeyHook "rusty hook"
+       with name 'rusty' 'hook',
+            description [;
+              print "The key hook is rusty and looks like it's been here for a long time.";
+              if (IronKey in self)
+              {
+                print "  An iron key hangs from it.";
+              }
+              new_line;
+            ],
+            found_in PubEast InsideGraveyard,
+            before [;
+             Receive: if (real_location==InsideGraveyard) { "Yep!"; } else { "Nope."; } ! TODO
+            ],
+       has scenery supporter;
+
+Object -> IronKey "iron key"
+       with name 'iron' 'key',
+            article "an",
+            description "The key is rather large and made of iron.",
+            before [;
+            Take: if (self.movedFlag==0) { "The iron key is out of reach."; } else rfalse;
+            ],
+            movedFlag 0,
+       has scenery;
