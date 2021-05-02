@@ -1,10 +1,13 @@
 ! street
 ! 
 ! River [Boat] | Street 1 | Street 2 | Graveyard
+!
+! South River  | Clearing
+
 
 Object OutsidePub "Outside the Pub"
        with name 'pub',
-            description "Standing just outside the pub you notice the street is eerily deserted.  A lamppost stands proudly outside the pub serving as a sort of beacon, but otherwise takes your eye.  The street runs east to west and south leads back into the pub.",
+            description "Standing just outside the pub you notice the street is eerily deserted.  A lamp post stands proudly outside the pub serving as a sort of beacon, but otherwise takes your eye.  The street runs east to west and south leads back into the pub.",
             after [;
                   Go: if (random(100) <= 10)
                       {
@@ -84,8 +87,6 @@ Object  -> Boat "wooden boat"
                 self.scoreAwarded=1;
             }
 
-            !new_line;
-            !deadflag=2;
             rtrue;
         ],
         before [;
@@ -107,7 +108,7 @@ Object  -> Boat "wooden boat"
  has    static enterable container open;
 
 Object SouthRiver "South on the river"
-       with description "South on the river the reeds are getting thicker",
+       with description "The calm waters here do nothing to calm your nerves about being in this boat.  Thankfully,  the reeds have become overgrown and prevent you going any further, although you notice a small clearing to the east.",
        n_to [;
             if (player in Boat) ! && oar in player)
             {
@@ -129,10 +130,54 @@ Object SouthRiver "South on the river"
        e_to Clearing,
        has light;
 
-Object Clearing "A clearing",
-       with description "A tree, birds nest etc.",
+Object -> Reeds "reeds",
+       with name 'reed' 'reeds',
+            description "The reeds here have become very thick and you feel a little nervous about what could be lurking in there.",
+       has pluralname scenery;
+
+Object Clearing "Clearing",
+       with name 'chestnut' 'chestnuts' 'ground' 'children',
+            description "Thorny bushes surround this small area, with a magnificent chestnut tree taking pride of place in the centre.  The ground looks trodden, most likely by children gathering chestnuts.",
        w_to SouthRiver,
        has light;
+
+Object -> ChestnutTree "Chestnut tree",
+       with name 'large' 'chestnut' 'tree',
+            description [;
+             print "The large chestnut tree takes pride of place here, and must be many years old.";
+             if (Nest in location)
+             {
+                 print "  You can just about make out a bird's nest tucked away in the branches.";
+             }
+             new_line;
+            ],
+            before [;
+             Climb: "You briefly consider it, before realising there are no lower branches to get you going.";
+            ],
+       has scenery;
+
+Object -> Nest "Birds nest",
+       with name 'bird' 'birds' 'nest',
+            description "From this distance you can just about make out that it's a large bird's nest, but not much else.",
+            before [;
+            ThrownAt: if ((noun==Knife) || (noun==WalkingStick))
+                      {
+                          print "It completely smashes the nest (albeit with a rather satisfying sound), and something falls to the floor.";
+                          move magnet to location;
+                          remove nest;
+                          score++;
+                          rtrue;
+                      }
+                      else
+                      {
+                          "That doesn't seem to be able to reach high enough.";
+                      }
+            ],
+       has scenery;
+
+Object Magnet "magnet",
+       with name 'magnet',
+            description "The archetypal magnet.  It's U-shaped and coloured red.";
 
 Object PubEast "Street"
        with name 'steps' 'pillar' 'door',
