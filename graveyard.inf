@@ -31,7 +31,7 @@ Object InsideGraveyard
        has light;
 
 Object -> BirdBath
-       with description "An ornamental bird bath.",
+       with description "The ornamental bird bath is a stone cherub holding a dish, which gathers water for the birds when it rains.",
        has container;
 
 Object -> KeyHook
