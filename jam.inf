@@ -313,9 +313,9 @@ Object -> Cask "beer cask"
          description "The beer cask is made of wood, and is raised off the ground by small wooden feet.  It is connected to the bar above by a small pipe.",
          before [;
          LookUnder:
-            "You can just about make out a small mouse hole on the back wall underneath the cask.";
+            "Nothing there.";
          Pull,Push:
-            "The cask is pretty heavy, but you could probably look under it.";
+            "The cask is too heavy.";
          ],
   has static;
 
