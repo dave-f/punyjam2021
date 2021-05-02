@@ -34,6 +34,17 @@ Object -> LampPost
             description "The lamp post is made of decorative iron with a round lamp at the top.  It provides lighting for people who may be a little unsure on their feet after coming out the pub.",
        has scenery;
 
+Object Water "water"
+       with name 'water',
+            found_in PubWest SouthRiver,
+            description "The water seems calm however you and water do not mix.",
+            before [;
+             ThrownAt: "Not a good idea.";
+             Receive: "Not a good idea.";
+             Enter: JumpInWaterSub();rtrue;
+            ],
+            has scenery container open enterable;
+
 Object PubWest "River bank"
        with description "The road ends abruptly here to form a small river bank.  The river itself looks calm and runs gently south, however the sunlight is particularly dazzling off the water.",
        e_to OutsidePub,

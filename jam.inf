@@ -394,15 +394,15 @@ Object -> Hole "hole"
   "You find nothing unexpected.";
 ];
 
-[ UnlockWithoutKeySub;
+[UnlockWithoutKeySub;
   "You would need to specify which key to use, like ~unlock door with rusty key~.";
 ];
 
-[ LockWithoutKeySub;
+[LockWithoutKeySub;
   "You would need to specify which key to use, like ~lock door with rusty key~.";
 ];
 
-[ GetOutBoatSub;
+[GetOutBoatSub;
     if (player in Boat)
     {
         <<Exit>>;
@@ -410,10 +410,21 @@ Object -> Hole "hole"
     "You're not in a boat!";
 ];
 
+[JumpInWaterSub;
+    if (water in location)
+    {
+        print "Against your better judgement, you enter the water and a bitter coldness fills you before the inevitable end.";
+        deadflag=true;
+        rtrue;
+    }
+    else "You can't see any water!";
+];
+
 Extend 'look' * 'under' noun -> LookUnder;
 Extend 'get' first * 'out' 'boat' -> GetOutBoat;
 Extend 'unlock' first * noun -> UnlockWithoutKey;
 Extend 'lock' first * noun -> LockWithoutKey;
+Extend 'jump' first * 'in' / 'into' / 'at' 'water' -> JumpInWater;
 
 Verb 'wrap' * held 'around' / 'on' noun -> PutOn;
 
