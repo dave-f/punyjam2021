@@ -158,7 +158,7 @@ Object -> ChestnutTree "Chestnut tree",
              print "The large chestnut tree takes pride of place here, and must be many years old.";
              if (Nest in location)
              {
-                 print "  You can just about make out a bird's nest tucked away in the branches.";
+                 print "  You can just see a bird's nest tucked away in the branches.";
              }
              new_line;
             ],
