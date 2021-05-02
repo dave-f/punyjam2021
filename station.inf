@@ -27,7 +27,11 @@ Object -> Counter "counter"
 Object -> WalkingStick "walking stick"
           with name 'walking' 'stick',
                initial "A walking stick has been left by the chairs on the back wall.",
-               description "The walking stick is of the classic design; wooden and straight, with a hook at the top.";
+               description "The walking stick is of the classic design; wooden and straight, with a hook at the top.",
+          before [;
+           Receive: if (noun==Magnet) { print "It hooks on easily.  "; rfalse; } else { "It just falls off again."; }
+          ],
+          has supporter;
 
 Object -> Painting "painting"
        with name 'painting' 'picture',
@@ -60,7 +64,7 @@ with   parse_name [ i;
          Give: if (noun==Knife)
          {
              remove knife;
-             print "He looks pleased, yet anxious.  ~Lovely, thanks, will come in handy for next time - just hope you can get us out of this pickle!~^";
+             print "He looks pleased, yet remains anxious.  ~Lovely, thanks, will come in handy for next time - just hope you can get us out of this pickle!~^";
              score++;
              rtrue;
          } 
