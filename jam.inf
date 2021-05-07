@@ -460,6 +460,7 @@ Extend 'unlock' first * noun -> UnlockWithoutKey;
 Extend 'lock' first * noun -> LockWithoutKey;
 Extend 'jump' first * 'in' / 'into' / 'at' 'water' -> JumpInWater;
 Extend 'get' first * noun 'with' / 'using' noun -> GetWith;
+Extend 'take' first * noun 'with' / 'using' noun -> GetWith;
 
 Verb 'hang' * held 'on' noun -> PutOn;
 Verb 'wrap' * held 'around' / 'on' noun -> PutOn;
