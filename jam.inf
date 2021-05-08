@@ -440,12 +440,12 @@ Object -> Hole "hole"
         print "Using the walking stick and magnet together you manage to fish the key off the hook, and retrieve it easily.";
         move IronKey to player;
         give IronKey ~scenery;
+        new_line;
         if (IronKey.movedFlag==0)
         {
           IronKey.movedFlag = 1;
           score++;
         }
-        else new_line;
         rtrue;
       }
       else
