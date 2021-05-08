@@ -48,9 +48,6 @@ Object  GraveyardGate "graveyard gate"
 
 Object InsideGraveyard "Inside the Graveyard"
        with description "Standing at the entrance you get an idea of the size of the graveyard, with paths leading north and south to different areas.  An ornamental bird bath stands in the centre here, and just by the gate is the key hook.",
-            after [;
-             Go: print "Accessing the graveyard you start to feel your senses coming alive, and have reached the end of this part of the adventure! Congratulations!"; deadflag=2; rtrue;
-       ],
        w_to PubEast, ! TODO n_to and s_to
        has light;
 
@@ -71,7 +68,17 @@ Object KeyHook "rusty hook"
             ],
             found_in PubEast InsideGraveyard,
             before [;
-             Receive: if (real_location==InsideGraveyard) { "Yep!"; } else { "Nope."; } ! TODO
+             Receive: if (noun==IronKey)
+                      {
+                         if (real_location==InsideGraveyard)
+                         {
+                            rfalse;
+                         }
+                         else
+                         {
+                            "That's a little awkward.";
+                         }
+                      }
             ],
        has scenery supporter;
 
@@ -80,7 +87,7 @@ Object -> IronKey "iron key"
             article "an",
             description "The key is rather large and made of iron.",
             before [;
-            Take: if (self.movedFlag==0) { "The iron key is out of reach."; } else rfalse;
+            Take: if ((self in KeyHook) && (real_location==PubEast)) { "The iron key is out of reach."; } else rfalse;
             ],
             movedFlag 0,
        has scenery;

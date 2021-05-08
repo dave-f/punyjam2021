@@ -431,17 +431,21 @@ Object -> Hole "hole"
 
 [GetWithSub;
   ! TODO This is a bit hackish
-  if ((noun==IronKey) && (location==PubEast) && (IronKey.movedFlag==0))
+  if ((noun==IronKey) && (location==PubEast) && (IronKey in KeyHook))
   {
     if ((second==WalkingStick) || (second==Magnet))
     {
       if (Magnet in WalkingStick)
       {
-        print "Using the walking stick and magnet together you manage to fish the key off the hook, and get it through the gate easily.";
+        print "Using the walking stick and magnet together you manage to fish the key off the hook, and retrieve it easily.";
         move IronKey to player;
         give IronKey ~scenery;
-        IronKey.movedFlag = 1;
-        score++;
+        if (IronKey.movedFlag==0)
+        {
+          IronKey.movedFlag = 1;
+          score++;
+        }
+        else new_line;
         rtrue;
       }
       else
