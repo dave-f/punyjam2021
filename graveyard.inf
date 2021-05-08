@@ -3,14 +3,23 @@
 Object  GraveyardGate "graveyard gate"
  with   name 'iron' 'graveyard' 'gate',
         description [;
-            print "The grand iron gate towers over you.  Through the gate you can see the path splits north and south, taking different routes around the graveyard.";
+            print "The grand iron gate towers over you.  ";
+            if (real_location==PubEast)
+            {
+              print "Further east past the gate, you can see the path splits north and south, taking different routes around the graveyard.";
+
+              if (IronKey in KeyHook)
+              {
+                print "  You notice on the other side of the gate there's a key on a hook.";
+              }
+            }
+            else
+            {
+              print "Beyond it, to the west, leads back onto the street.";
+            }
             if (self has locked)
             {
-                print "  It is currently locked.";
-            }
-            if (IronKey in KeyHook)
-            {
-                "  You notice on the other side of the gate there's a key on a hook.";
+                print "  The gate is currently locked.";
             }
             new_line;
         ],
@@ -48,11 +57,13 @@ Object  GraveyardGate "graveyard gate"
 
 Object InsideGraveyard "Inside the Graveyard"
        with description "Standing at the entrance you get an idea of the size of the graveyard, with paths leading north and south to different areas.  An ornamental bird bath stands in the centre here, and just by the gate is the key hook.",
-       w_to PubEast, ! TODO n_to and s_to
+       w_to PubEast,
+       n_to NorthGraveyard,
+       s_to SouthGraveyard,
        has light;
 
 Object -> BirdBath "bird bath"
-       with name 'bird' 'bath',
+       with name 'bird' 'bath' 'cherub',
             description "The ornamental bird bath is a stone cherub holding a dish, which gathers water for the birds when it rains.",
        has scenery;
 
@@ -68,16 +79,20 @@ Object KeyHook "rusty hook"
             ],
             found_in PubEast InsideGraveyard,
             before [;
-             Receive: if (noun==IronKey)
+             Receive: if (real_location==InsideGraveyard)
                       {
-                         if (real_location==InsideGraveyard)
+                         if (noun==IronKey)
                          {
                             rfalse;
                          }
                          else
                          {
-                            "That's a little awkward.";
+                            "It doesn't stay on.";
                          }
+                      }
+                      else
+                      {
+                        "That's a little awkward from here.";
                       }
             ],
        has scenery supporter;
@@ -91,3 +106,13 @@ Object -> IronKey "iron key"
             ],
             movedFlag 0,
        has scenery;
+
+Object NorthGraveyard "North Graveyard"
+       with description "North of the graveyard.",
+            s_to InsideGraveyard,
+       has light;
+
+Object SouthGraveyard "South Graveyard"
+       with description "South of the graveyard.",
+            n_to InsideGraveyard,
+       has light;

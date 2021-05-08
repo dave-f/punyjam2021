@@ -173,7 +173,7 @@ Object -> Nest "Birds nest",
             before [;
             ThrownAt: if ((noun==Knife) || (noun==WalkingStick))
                       {
-                          print "Bullseye! The nest completely smashes (albeit with a rather satisfying sound), and something falls to the floor.";
+                          print "Bullseye! The nest completely smashes (albeit with a rather satisfying sound), and something falls to the floor.^";
                           move magnet to location;
                           move noun to location;
                           remove nest;
