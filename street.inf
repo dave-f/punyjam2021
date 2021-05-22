@@ -5,50 +5,50 @@
 ! South River  | Clearing
 
 
-Object OutsidePub "Outside the Pub"
-       with name 'pub',
-            description "Standing just outside the pub you notice the street is eerily deserted.  A lamp post stands proudly outside the pub serving as a sort of beacon, but otherwise takes your eye.  The street runs east to west and south leads back into the pub.",
-            after [;
-                  Go: if (random(100) <= 10)
-                      {
-                          if ((Coat hasnt worn) || (Hat hasnt worn))
-                          {
-                              print "A passer-by walks past just as you are on the street.  He goes into an immediate panic, shouting ~It's not natural!~ and beats you to death with his walking stick.";
-                              deadflag=true;
-                              return 1;
-                          }
-                          else
-                          {
-                              print "A passer-by walks past, glancing over briefly before shaking his head and walking off.^^";
-                              return 0;
-                          }
-                      }
-            ],
-       e_to PubEast,
-       w_to PubWest,
-       s_to PubDoor,
-       has light;
+Object  OutsidePub "Outside the Pub"
+ with   name 'pub',
+        description "Standing just outside the pub you notice the street is eerily deserted.  A lamp post stands proudly outside the pub serving as a sort of beacon, but otherwise takes your eye.  The street runs east to west and south leads back into the pub.",
+        after [;
+         Go: if (random(100) <= 10)
+         {
+             if ((Coat hasnt worn) || (Hat hasnt worn))
+             {
+                 print "A passer-by walks past just as you are on the street.  He goes into an immediate panic, shouting ~It's not natural!~ and beats you to death with his walking stick.";
+                 deadflag=true;
+                 return 1;
+             }
+             else
+             {
+                 print "A passer-by walks past, glancing over briefly before shaking his head and walking off.^^";
+                 return 0;
+             }
+         }
+        ],
+        e_to PubEast,
+        w_to PubWest,
+        s_to PubDoor,
+ has    light;
 
-Object -> LampPost
-       with name 'lamp' 'post',
-            description "The lamp post is made of decorative iron with a round lamp at the top.  It provides lighting for people who may be a little unsure on their feet after coming out the pub.",
-       has scenery;
+Object  -> LampPost
+ with   name 'lamp' 'post',
+        description "The lamp post is made of decorative iron with a round lamp at the top.  It provides lighting for people who may be a little unsure on their feet after coming out the pub.",
+ has    scenery;
 
-Object Water "water"
-       with name 'water',
-            found_in PubWest SouthRiver,
-            description "The water seems calm however you and water do not mix.",
-            before [;
-             ThrownAt: "Not a good idea.";
-             Receive: "Not a good idea.";
-             Enter: JumpInWaterSub();rtrue;
-            ],
-            has scenery container open enterable;
+Object  Water "water"
+ with   name 'water',
+        found_in PubWest SouthRiver,
+        description "The water seems calm however you and water do not mix.",
+        before [;
+         ThrownAt: "Not a good idea.";
+         Receive: "Not a good idea.";
+         Enter: JumpInWaterSub();rtrue;
+        ],
+ has    scenery container open enterable;
 
-Object PubWest "River bank"
-       with description "The road ends abruptly here to form a small river bank.  The river itself looks calm and runs gently south, however the sunlight is particularly dazzling off the water.",
-       e_to OutsidePub,
-       s_to [;
+Object  PubWest "River bank"
+ with   description "The road ends abruptly here to form a small river bank.  The river itself looks calm and runs gently south, however the sunlight is particularly dazzling off the water.",
+        e_to OutsidePub,
+        s_to [;
             if (player in Boat) ! && oar in player)
             {
                 if (false) ! self.monster_present==true)
@@ -65,8 +65,8 @@ Object PubWest "River bank"
             {
                 "You would need to be in the boat.";
             }
-       ],
-       has light;
+        ],
+ has    light;
 
 Object  -> Boat "wooden boat"
  with   name 'wooden' 'boat',
@@ -84,20 +84,20 @@ Object  -> Boat "wooden boat"
         after [;
          Enter:
             print "You step cautiously into the boat.^";
-
+            
             if (~~(Sunglasses has worn))
             {
                 print " As you do so, you are dazzled by the sunlight out on the water, and lose your footing, causing you to fall into the water, which as you are all too aware will prove deadly.";
                 deadflag=true;
                 rtrue;
             }
-
+            
             if (self.scoreAwarded==0)
             {
                 score++;
                 self.scoreAwarded=1;
             }
-
+            
             rtrue;
         ],
         before [;
@@ -118,9 +118,9 @@ Object  -> Boat "wooden boat"
         scoreAwarded 0,
  has    static enterable container open;
 
-Object SouthRiver "South on the river"
-       with description "The calm waters here do nothing to calm your nerves about being in this boat.  Thankfully,  the reeds have become overgrown and prevent you going any further, although you notice a small clearing to the east.",
-       n_to [;
+Object  SouthRiver "South on the river"
+ with   description "The calm waters here do nothing to calm your nerves about being in this boat.  Thankfully,  the reeds have become overgrown and prevent you going any further, although you notice a small clearing to the east.",
+        n_to [;
             if (player in Boat) ! && oar in player)
             {
                 if (false) ! self.monster_present==true)
@@ -137,69 +137,69 @@ Object SouthRiver "South on the river"
             {
                 "You would need to be in the boat.";
             }
-       ],
-       e_to Clearing,
-       has light;
+        ],
+        e_to Clearing,
+ has    light;
 
-Object -> Reeds "reeds",
-       with name 'reed' 'reeds',
-            description "The reeds here have become very thick and you feel a little nervous about what could be lurking in there.",
-       has pluralname scenery;
+Object  -> Reeds "reeds",
+ with   name 'reed' 'reeds',
+        description "The reeds here have become very thick and you feel a little nervous about what could be lurking in there.",
+ has    pluralname scenery;
 
-Object Clearing "Clearing",
-       with name 'chestnut' 'chestnuts' 'ground' 'children',
-            description "Thorny bushes surround this small area, with a magnificent chestnut tree taking pride of place in the centre.  The ground looks trodden, most likely by children gathering chestnuts.",
-       w_to SouthRiver,
-       has light;
+Object  Clearing "Clearing",
+ with   name 'chestnut' 'chestnuts' 'ground' 'children',
+        description "Thorny bushes surround this small area, with a magnificent chestnut tree taking pride of place in the centre.  The ground looks trodden, most likely by children gathering chestnuts.",
+        w_to SouthRiver,
+ has    light;
 
-Object -> ChestnutTree "Chestnut tree",
-       with name 'large' 'chestnut' 'tree',
-            description [;
-             print "The large chestnut tree takes pride of place here, and must be many years old.";
-             if (Nest in location)
-             {
-                 print "  You can just see a bird's nest tucked away in the branches.";
-             }
-             new_line;
-            ],
-            before [;
-             Climb: "You briefly consider it, before realising there are no lower branches to get you going.";
-            ],
-       has scenery;
+Object  -> ChestnutTree "Chestnut tree",
+ with   name 'large' 'chestnut' 'tree',
+        description [;
+            print "The large chestnut tree takes pride of place here, and must be many years old.";
+            if (Nest in location)
+            {
+                print "  You can just see a bird's nest tucked away in the branches.";
+            }
+            new_line;
+        ],
+        before [;
+         Climb: "You briefly consider it, before realising there are no lower branches to get you going.";
+        ],
+ has    scenery;
 
-Object -> Nest "Birds nest",
-       with name 'bird' 'birds' 'nest',
-            description "From this distance you can just about make out that it's a large bird's nest, but not much else.",
-            before [;
-            ThrownAt: if ((noun==Knife) || (noun==WalkingStick))
-                      {
-                          print "Bullseye! The nest completely smashes (albeit with a rather satisfying sound), and something falls to the floor.^";
-                          move magnet to location;
-                          move noun to location;
-                          remove nest;
-                          score++;
-                          rtrue;
-                      }
-                      else
-                      {
-                          "That doesn't seem to be able to reach high enough.";
-                      }
-            ],
-       has scenery;
+Object  -> Nest "Birds nest",
+ with   name 'bird' 'birds' 'nest',
+        description "From this distance you can just about make out that it's a large bird's nest, but not much else.",
+        before [;
+         ThrownAt: if ((noun==Knife) || (noun==WalkingStick))
+         {
+             print "Bullseye! The nest completely smashes (albeit with a rather satisfying sound), and something falls to the floor.^";
+             move magnet to location;
+             move noun to location;
+             remove nest;
+             score++;
+             rtrue;
+         }
+         else
+         {
+             "That doesn't seem to be able to reach high enough.";
+         }
+        ],
+ has    scenery;
 
-Object Magnet "magnet",
-       with name 'magnet',
-            description "The archetypal magnet.  It's U-shaped and coloured red.";
+Object  Magnet "magnet",
+ with   name 'magnet',
+        description "The archetypal magnet.  It's U-shaped and coloured red.";
 
-Object PubEast "Street"
-       with name 'steps' 'pillar' 'door',
-            description "The rather quiet street continues here, where it stops in front of a huge graveyard, fronted by a large iron gate.  Steps lead north into the Police Station, east leads into the Graveyard and west leads back to the pub.",
-       n_to InsideStation,
-       e_to GraveyardGate,
-       w_to OutsidePub,
-       has light;
+Object  PubEast "Street"
+ with   name 'steps' 'pillar' 'door',
+        description "The rather quiet street continues here, where it stops in front of a huge graveyard, fronted by a large iron gate.  Steps lead north into the Police Station, east leads into the Graveyard and west leads back to the pub.",
+        n_to InsideStation,
+        e_to GraveyardGate,
+        w_to OutsidePub,
+ has    light;
 
-Object -> PoliceStation
-       with name 'police' 'station',
-             description "The Station is a rather large building, with steps leading north into it.  Concrete pillars line either side of the door and above those it reads POLICE STATION.",
-       has scenery;
+Object  -> PoliceStation
+ with   name 'police' 'station',
+        description "The Station is a rather large building, with steps leading north into it.  Concrete pillars line either side of the door and above those it reads POLICE STATION.",
+ has    scenery;

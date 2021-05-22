@@ -1,47 +1,51 @@
 ! police station
 
-Object InsideStation "Police Station"
-       with name 'chair' 'chairs' 'steps' 'wall',
-            description "Inside the police station is rather less grand than the outside would have you believe.  Chairs line the back wall, and you stand in front of the counter.  A painting hangs over the back wall.",
-            s_to PubEast,
-            d_to Crypt,
+Object  InsideStation "Police Station"
+ with   name 'chair' 'chairs' 'steps' 'wall',
+        description "Inside the police station is rather less grand 
+            than the outside would have you believe. Chairs line the 
+            back wall, and you stand in front of the counter. A 
+            painting hangs over the back wall, while the exit is 
+            south.",
+        s_to PubEast,
+        d_to Crypt,
         before [;
-        Go:
+         Go:
             if (selected_direction==d_to)
             {
                 print "The Inspector stands in your way shaking his finger.  ~No time for that yet old bean, sooner we get this sorted the better~.^";
                 return 2;
             }
-       ],
-       has light;
+        ],
+ has    light;
 
-Object -> Counter "counter"
-       with name 'counter',
-            description "The counter stands tall and separates you from the Inspector.  Behind it steps lead downwards.",
-       has scenery;
+Object  -> Counter "counter"
+ with   name 'counter',
+        description "The counter stands tall and separates you from the Inspector.  Behind it steps lead downwards.",
+ has    scenery;
 
 !Object -> Bell
 !       with name 'bell',
 !       has scenery; ! Can ring this later on in the game?
 
-Object -> WalkingStick "walking stick"
-          with name 'walking' 'stick',
-               initial "A walking stick has been left by the chairs on the back wall.",
-               description "The walking stick is of the classic design; wooden and straight, with a hook at the top.",
-          before [;
-           Receive: if (noun==Magnet) { print "It hooks on easily.  "; rfalse; } else { "It just falls off again."; }
-          ],
-          has supporter;
+Object  -> WalkingStick "walking stick"
+ with   name 'walking' 'stick',
+        initial "A walking stick has been left by the chairs on the back wall.",
+        description "The walking stick is of the classic design; wooden and straight, with a hook at the top.",
+        before [;
+         Receive: if (noun==Magnet) { print "It hooks on easily.  "; rfalse; } else { "It just falls off again."; }
+        ],
+ has    supporter;
 
-Object -> Painting "painting"
-       with name 'painting' 'picture',
-            description "The painting depicts a fishing ship in trouble on a stormy sea.  You're sure you've seen it before somewhere.",
-       has scenery;
+Object  -> Painting "painting"
+ with   name 'painting' 'picture',
+        description "The painting depicts a fishing ship in trouble on a stormy sea.  You're sure you've seen it before somewhere.",
+ has    scenery;
 
-Object -> Inspector "Inspector"
-with   parse_name [ i;
-         while(NextWord() == 'inspector' or 'policeman' or 'police' or 'copper' or 'cop' or 'man') i++;
-         return i;
+Object  -> Inspector "Inspector"
+ with   parse_name [ i;
+            while(NextWord() == 'inspector' or 'policeman' or 'police' or 'copper' or 'cop' or 'man') i++;
+            return i;
         ],
         article "an",
         description "The Inspector stands here, looking anxious.",
@@ -70,27 +74,27 @@ with   parse_name [ i;
          } 
          else if (noun==Note)
          {
-            remove note;
-            <<Ask Inspector 'note'>>;
+             remove note;
+             <<Ask Inspector 'note'>>;
          }
-         "The inspector looks confused.";
+            "The inspector looks confused.";
         ],
  has    animate;
 
 ! TODO
 
-Object Crypt "crypt"
-      with description "",
-      has light;
+Object  Crypt "crypt"
+ with   description "",
+ has    light;
 
-Object -> Sarcophagus
-       with description "",
-       has container;
+Object  -> Sarcophagus
+ with   description "",
+ has    container;
 
-Object -> MouseHole "mouse hole"
-   with name 'mouse' 'hole',
+Object  -> MouseHole "mouse hole"
+ with   name 'mouse' 'hole',
         description "Above the mouse hole someone has inscribed 'Bliz & Nibs'.",
-   has scenery container open;
+ has    scenery container open;
 
 !Not sure yet, perhaps just a bonus point?
 !Object -> -> PyramidCharm "Pyramid Charm"

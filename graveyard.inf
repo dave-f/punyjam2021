@@ -6,16 +6,16 @@ Object  GraveyardGate "graveyard gate"
             print "The grand iron gate towers over you.  ";
             if (real_location==PubEast)
             {
-              print "Further east past the gate, you can see the path splits north and south, taking different routes around the graveyard.";
-
-              if (IronKey in KeyHook)
-              {
-                print "  You notice on the other side of the gate there's a key on a hook.";
-              }
+                print "Further east past the gate, you can see the path splits north and south, taking different routes around the graveyard.";
+                
+                if (IronKey in KeyHook)
+                {
+                    print "  You notice on the other side of the gate there's a key on a hook.";
+                }
             }
             else
             {
-              print "Beyond it, to the west, leads back onto the street.";
+                print "Beyond it, to the west, leads back onto the street.";
             }
             if (self has locked)
             {
@@ -24,95 +24,103 @@ Object  GraveyardGate "graveyard gate"
             new_line;
         ],
         before [;
-        Unlock: if (second==IronKey)
-                { 
-                  if (self has open) 
-                  {
-                     "You would need to close the gate first.";
-                  }
-                  else
-                  {
-                    give self ~locked; "The key fits nicely, and unlocks the gate."; 
-                  }
-                } 
-                else { "It doesn't seem to fit."; }
-        Lock: if (second==IronKey) 
-              {
-                if (self has open)
-                {
-                    "You would need to close the gate first.";
-                }
-                else
-                {
-                    give self locked;
-                    "You lock the gate.";
-                } 
-              }
-              else { "It doesn't seem to fit."; }
+         Unlock: if (second==IronKey)
+         { 
+             if (self has open) 
+             {
+                 "You would need to close the gate first.";
+             }
+             else
+             {
+                 give self ~locked; "The key fits nicely, and unlocks the gate."; 
+             }
+         } 
+         else { "It doesn't seem to fit."; }
+         Lock: if (second==IronKey) 
+         {
+             if (self has open)
+             {
+                 "You would need to close the gate first.";
+             }
+             else
+             {
+                 give self locked;
+                 "You lock the gate.";
+             } 
+         }
+         else { "It doesn't seem to fit."; }
         ],
         found_in PubEast InsideGraveyard,
         door_dir (e_to) (w_to),
         gotKey 0,
  has    door openable lockable locked scenery;
 
-Object InsideGraveyard "Inside the Graveyard"
-       with description "Standing at the entrance you get an idea of the size of the graveyard, with paths leading north and south to different areas.  An ornamental bird bath stands in the centre here, and just by the gate is the key hook.",
-       w_to PubEast,
-       n_to NorthGraveyard,
-       s_to SouthGraveyard,
-       has light;
+Object  InsideGraveyard "Inside the Graveyard"
+ with   name 'overgrowth',
+        description "Standing at the entrance you get an idea of the 
+            size of the graveyard. Nature has, however, ran its 
+            course and the place is somewhat overgrown. Amongst the 
+            overgrowth paths lead north and south. An ornamental 
+            bird bath stands in the centre here, and just by the 
+            gate is the key hook.",
+        w_to PubEast,
+        n_to NorthGraveyard,
+        s_to SouthGraveyard,
+ has    light;
 
-Object -> BirdBath "bird bath"
-       with name 'bird' 'bath' 'cherub',
-            description "The ornamental bird bath is a stone cherub holding a dish, which gathers water for the birds when it rains.",
-       has scenery;
+Object  -> BirdBath "bird bath"
+ with   name 'bird' 'bath' 'cherub',
+        description "The ornamental bird bath is a stone cherub holding a dish, which gathers water for the birds when it rains.",
+ has    scenery;
 
-Object KeyHook "rusty hook"
-       with name 'rusty' 'hook',
-            description [;
-              print "The key hook is rusty and looks like it's been here for a long time.";
-              if (IronKey in self)
-              {
+Object  KeyHook "rusty hook"
+ with   name 'rusty' 'hook',
+        description [;
+            print "The key hook is rusty and looks like it's been here for a long time.";
+            if (IronKey in self)
+            {
                 print "  An iron key hangs from it.";
-              }
-              new_line;
-            ],
-            found_in PubEast InsideGraveyard,
-            before [;
-             Receive: if (real_location==InsideGraveyard)
-                      {
-                         if (noun==IronKey)
-                         {
-                            rfalse;
-                         }
-                         else
-                         {
-                            "It doesn't stay on.";
-                         }
-                      }
-                      else
-                      {
-                        "That's a little awkward from here.";
-                      }
-            ],
-       has scenery supporter;
+            }
+            new_line;
+        ],
+        found_in PubEast InsideGraveyard,
+        before [;
+         Receive: if (real_location==InsideGraveyard)
+         {
+             if (noun==IronKey)
+             {
+                 rfalse;
+             }
+             else
+             {
+                 "It doesn't stay on.";
+             }
+         }
+         else
+         {
+             "That's a little awkward from here.";
+         }
+        ],
+ has    scenery supporter;
 
-Object -> IronKey "iron key"
-       with name 'iron' 'key',
-            article "an",
-            description "The key is rather large and made of iron.",
-            before [;
-            Take: if ((self in KeyHook) && (real_location==PubEast)) { "The iron key is out of reach."; } else rfalse;
-            ],
-            movedFlag 0,
-       has scenery;
+Object  -> IronKey "iron key"
+ with   name 'iron' 'key',
+        article "an",
+        description "The key is rather large and made of iron.",
+        before [;
+         Take: if ((self in KeyHook) && (real_location==PubEast)) { "The iron key is out of reach."; } else rfalse;
+        ],
+        movedFlag 0,
+ has    scenery;
 
-Object NorthGraveyard "North Graveyard"
-       with description "North of the graveyard.",
-            s_to InsideGraveyard,
-       has light;
+Object  NorthGraveyard "North Graveyard"
+ with   description "North of the graveyard.",
+        s_to InsideGraveyard,
+ has    light;
 
-Object SouthGraveyard "South Graveyard"
-       with description "South of the graveyard.",
-            n_to InsideGraveyard,
-       has light;
+! Crypt -> Get here, and the body is gone
+
+Object  SouthGraveyard "South Graveyard"
+ with   description "South of the graveyard.",
+        n_to InsideGraveyard,
+ has    light;

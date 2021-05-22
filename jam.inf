@@ -44,7 +44,7 @@ Constant OPTIONAL_SIMPLE_DOORS;
 
 Constant MAX_SCORE 5;
 
-!Constant INITIAL_LOCATION_VALUE = InsideStation;
+!Constant INITIAL_LOCATION_VALUE = InsideGraveyard;!InsideStation;
 Constant INITIAL_LOCATION_VALUE = BroomCloset;
 
 ! Define your own global variables here, if any
@@ -65,8 +65,8 @@ Include "puny.h";
 
 ! ------------------------------ Pub ------------------------------
 
-Object BroomCloset "Broom Closet"
-    with
+Object  BroomCloset "Broom Closet"
+ with   
         description [;
             print "You're in the rather dirty broom closet of The Red Anchor.  Various cleaning appliances line the walls.";
             if (~~ self.fabric_taken)
@@ -81,45 +81,45 @@ Object BroomCloset "Broom Closet"
                 self.fabric_taken = false;
             }
         ],
-    has light;
+ has    light;
 
-Object -> PileOfFabric "pile of fabric"
-    with
+Object  -> PileOfFabric "pile of fabric"
+ with   
         name 'pile' 'of' 'fabric' 'bandages',
         description "The fabric is bits of bandage that have come off, more than likely when that clumsy policeman put you in here.",
         before [;
-        Take: 
-        if (Pipe.workingFlag==1) { "The fabric is now stuck onto the pipe."; }
+         Take: 
+            if (Pipe.workingFlag==1) { "The fabric is now stuck onto the pipe."; }
         ],
         after [;
-        Take: give self ~concealed; BroomCloset.fabric_taken = true;
+         Take: give self ~concealed; BroomCloset.fabric_taken = true;
         ],
-    has concealed;
+ has    concealed;
 
-Object -> Appliances "Cleaning appliances"
-    with
+Object  -> Appliances "Cleaning appliances"
+ with   
         name 'cleaning' 'appliances',
         description "Various cleaning bits and pieces all of which look too dirty to touch.",
-    has scenery;
+ has    scenery;
 
-Object -> Note "note"
-    with
+Object  -> Note "note"
+ with   
         name 'note',
         initial "A note has been fixed to the wall with a knife.",
         description "The note appears to have been written in a hurry.  It reads: 'Glad you could join us again - don't have time to get the details down, suffice it to say I'm getting some real heat on this one and could use some help.   I'll be waiting down the station when you're ready - mind how yer go.'",
         after [;
-            Take:
-                if(Knife hasnt moved && self hasnt general) {
-                    ! Use the general attribute to say we've already pulled
-                    ! the note from the wall, so we don't print this twice.
-                    give self general;
-                    "The knife rips a long hole in the note as you pull the
-                        note from the wall.";
-                }
+         Take:
+            if(Knife hasnt moved && self hasnt general) {
+                ! Use the general attribute to say we've already pulled
+                ! the note from the wall, so we don't print this twice.
+                give self general;
+                "The knife rips a long hole in the note as you pull the
+                note from the wall.";
+            }
         ];
 
-Object -> Knife "knife"
-    with
+Object  -> Knife "knife"
+ with   
         name 'knife',
         description "The knife is pure gold and encrusted with jewels.  You recognise it immediately as the object capable of bringing you to existence.",
         describe [;
@@ -137,15 +137,15 @@ Object -> Knife "knife"
             rfalse;
         ],
         after [;
-            Take:
-                if(Note hasnt moved) {
-                    give Note moved;
-                    "The note falls to the floor as you pull out the knife.";
-                }
+         Take:
+            if(Note hasnt moved) {
+                give Note moved;
+                "The note falls to the floor as you pull out the knife.";
+            }
         ];
 
-Object BroomClosetDoor "broom closet door"
-    with
+Object  BroomClosetDoor "broom closet door"
+ with   
         parse_name [ w1 w2 w3;
             w1 = NextWord(); w2 = NextWord(); w3 = NextWord();
             if(w1 == 'broom' && w2 == 'closet' && w3 == 'door') return 3;
@@ -167,10 +167,10 @@ Object BroomClosetDoor "broom closet door"
         ],
         found_in BroomCloset Pub,
         door_dir (e_to) (w_to),
-    has static door openable;
+ has    static door openable;
 
-Object Pub "Pub"
-    with
+Object  Pub "Pub"
+ with   
         description [;
             if (self hasnt visited)
             {
@@ -192,7 +192,7 @@ Object Pub "Pub"
         e_to Bathroom,
         n_to PubDoor,
         d_to Cellar
-    has light;
+ has    light;
 
 Object  -> PubDoor "pub door" !name 'pub' 'door',
  with   !name 'pub' 'door', 
@@ -220,8 +220,8 @@ Object  -> PubDoor "pub door" !name 'pub' 'door',
             }
         ],
         before [;
-          UnlockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
-          LockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
+         UnlockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
+         LockWithoutKey: "The barman is very protective about his keys for the pub, best to leave it to him.";
         ],
         !door_to OutsidePub,
         !door_dir n_to,
@@ -229,25 +229,25 @@ Object  -> PubDoor "pub door" !name 'pub' 'door',
         door_dir (s_to) (n_to),
  has    scenery door openable lockable locked;
 
-Object -> BeerPump "beer pump"
-       with name 'beer' 'pump',
-            description "A standard beer pump.  It's seen better days, but so has the rest of the place.",
-       has  scenery;
+Object  -> BeerPump "beer pump"
+ with   name 'beer' 'pump',
+        description "A standard beer pump.  It's seen better days, but so has the rest of the place.",
+ has    scenery;
 
-Object -> Barman "barman"
-with   parse_name [ i;
-         while(NextWord() == 'barman' or 'bartender' or 'bartend' or 'man' or 'waiter') i++;
-         return i;
+Object  -> Barman "barman"
+ with   parse_name [ i;
+            while(NextWord() == 'barman' or 'bartender' or 'bartend' or 'man' or 'waiter') i++;
+            return i;
         ],
         description [;
-           if (Pipe.workingFlag==1)
-           {
-             "The barman stands here, polishing glasses.";
-           }
-           else
-           {
-             "The barman is here, alternately pulling feverishly at the beer pump, and swearing.";
-           }
+            if (Pipe.workingFlag==1)
+            {
+                "The barman stands here, polishing glasses.";
+            }
+            else
+            {
+                "The barman is here, alternately pulling feverishly at the beer pump, and swearing.";
+            }
         ],
         life [;
          Answer: "The barman seems uninterested and continues polishing his glasses.";
@@ -263,76 +263,76 @@ with   parse_name [ i;
         givenFlag 0,
  has    animate;
 
-Object Coat "raincoat"
-       with name 'rain' 'coat' 'raincoat' 'mac',
-            description "The classic Mackintosh style coat, chosen as it covers a significant part of your body, and waterproof.",
-       has clothing;
+Object  Coat "raincoat"
+ with   name 'rain' 'coat' 'raincoat' 'mac',
+        description "The classic Mackintosh style coat, chosen as it covers a significant part of your body, and waterproof.",
+ has    clothing;
 
-Object Hat "hat"
-       with name 'hat',
-            description "A rather smart felt bowler hat.  Coupled with the coat, makes a half-convincing disguise to the casual passer-by.",
-       has clothing;
+Object  Hat "hat"
+ with   name 'hat',
+        description "A rather smart felt bowler hat.  Coupled with the coat, makes a half-convincing disguise to the casual passer-by.",
+ has    clothing;
 
-Object Bathroom "Pub bathroom"
-    with
+Object  Bathroom "Pub bathroom"
+ with   
         description "This small, cramped, bathroom provides the very basics; toilet, sink and mirror.  Presumably anyone in use of this facility doesn't hang around for long afterwards.",
         w_to Pub,
-    has light;
+ has    light;
 
-Object -> Toilet "toilet"
-    with name 'toilet' 'bog',
-         description "Looking at this rather sorry piece of porcelain, you're glad you no longer have the need to use it.",
-    has scenery container open;
+Object  -> Toilet "toilet"
+ with   name 'toilet' 'bog',
+        description "Looking at this rather sorry piece of porcelain, you're glad you no longer have the need to use it.",
+ has    scenery container open;
 
-Object -> Sink "sink"
-    with name 'sink',
-         description "The sink is just about visible underneath the grime built up around it.  No plug of course, but that's probably for the best.^",
-         after [;
-             Examine: <Search self>;
-         ],
-    has scenery container open;
+Object  -> Sink "sink"
+ with   name 'sink',
+        description "The sink is just about visible underneath the grime built up around it.  No plug of course, but that's probably for the best.^",
+        after [;
+         Examine: <Search self>;
+        ],
+ has    scenery container open;
 
-Object -> -> Sunglasses "sunglasses"
-    with name 'sun' 'glasses' 'sunglasses',
-         description "The sunglasses are plastic and look cheap, perhaps discarded after a night of revelry.",
-    has clothing pluralname;
+Object  -> -> Sunglasses "sunglasses"
+ with   name 'sun' 'glasses' 'sunglasses',
+        description "The sunglasses are plastic and look cheap, perhaps discarded after a night of revelry.",
+ has    clothing pluralname;
 
-Object -> Mirror "mirror"
-    with name 'mirror',
-         description "You stare back at yourself with a stark realisation of how different you look, the bandages covering a significant part of your body.  You decide not to dwell too much.",
-    has scenery;
+Object  -> Mirror "mirror"
+ with   name 'mirror',
+        description "You stare back at yourself with a stark realisation of how different you look, the bandages covering a significant part of your body.  You decide not to dwell too much.",
+ has    scenery;
 
-Object Cellar "Beer cellar"
-    with name 'feet' 'leak',
-         description "Cellar seems a somewhat grand choice of word for this small cramped area.  It's a tiny underground area with a pungent smell of beer.  Steps lead back up to the pub.",
-    u_to Pub,
-  has light;
+Object  Cellar "Beer cellar"
+ with   name 'feet' 'leak',
+        description "Cellar seems a somewhat grand choice of word for this small cramped area.  It's a tiny underground area with a pungent smell of beer.  Steps lead back up to the pub.",
+        u_to Pub,
+ has    light;
 
-Object -> Cask "beer cask"
-    with name 'beer' 'cask',
-         description "The beer cask is made of wood, and is raised off the ground by small wooden feet.  It is connected to the bar above by a small pipe.",
-         before [;
+Object  -> Cask "beer cask"
+ with   name 'beer' 'cask',
+        description "The beer cask is made of wood, and is raised off the ground by small wooden feet.  It is connected to the bar above by a small pipe.",
+        before [;
          LookUnder:
             "Nothing there.";
          Pull,Push:
             "The cask is too heavy.";
-         ],
-  has static;
+        ],
+ has    static;
 
-Object -> Pipe "pipe"
-    with name 'pipe',
-         description [;
+Object  -> Pipe "pipe"
+ with   name 'pipe',
+        description [;
             print "The pipe connects this cask to the beer pumps up above.  ";
             if (self.workingFlag==1)
             {
-              "Some bandages are securely fixed to the pipe, stopping the leak.";
+                "Some bandages are securely fixed to the pipe, stopping the leak.";
             }
             else
             {
-              "It appears to have a small hole in it where beer is slowly leaking.";
+                "It appears to have a small hole in it where beer is slowly leaking.";
             }
-         ],
-         before [;
+        ],
+        before [;
          Receive:
             if (noun==PileOfFabric)
             {
@@ -342,46 +342,47 @@ Object -> Pipe "pipe"
                 "You attach the fabric to the pipe, which stops the leak.";
             }
             "Interesting concept!";
-         ],
+        ],
         workingFlag 0,
-    has scenery supporter;
+ has    scenery supporter;
 
-Object -> Hole "hole"
-    with name 'hole',
-         description [;
-           if (Pipe.workingFlag==1)
-           {
-               "The hole has been sealed by some securely-fixed bandages.";
-           }
-           else
-           {
-               "The hole is small, but it is definitely causing a leak.";
-           }
-         ],
-         before [;
+Object  -> Hole "hole"
+ with   name 'hole',
+        description [;
+            if (Pipe.workingFlag==1)
+            {
+                "The hole has been sealed by some securely-fixed bandages.";
+            }
+            else
+            {
+                "The hole is small, but it is definitely causing a leak.";
+            }
+        ],
+        before [;
          Receive:
-           if (noun==PileOfFabric)
-           {
-              <<PutOn PileOfFabric Pipe>>;
-           }
-         ],
-     has scenery container open;
+            if (noun==PileOfFabric)
+            {
+                <<PutOn PileOfFabric Pipe>>;
+            }
+        ],
+ has    scenery container open;
 
 ! ------------------------------ Street ------------------------------
 
 
 ! Part 1
-! ------                                        |      Crypt     |
+! ------                                        |      Crypt     | Graveyard North    |   Graveyard x |
 !                                               | Police Station |
-! River |   Street       |   Street    | Street |     Street     | Graveyard |
-!  |    | Broom cupboard |    Pub*     | Toilet |
-!  V                     | Beer garden |
+! River |   Street       |   Street    | Street |     Street     | Graveyard Entrance |   Graveyard z |    East of Graveyard...
+!  |    | Broom cupboard |    Pub*     | Toilet |                |
+!  V                     | Beer garden |                         | Graveyard South    |   Graveyard y |
 !
-! Part 2
-! ------
+! South |
+! River |    Clearing    |
+
 
 [Initialise;
-
+    
     !Debug stuff
     !give PubDoor ~locked;
     !move Note to player;
@@ -393,22 +394,22 @@ Object -> Hole "hole"
     !give Hat worn;
     !give Coat worn;
     !give Sunglasses worn;
-
+    
     print "^^With the familiar crackle you come into being once more.  Consciousness thrills you, and you take a moment enjoying what it feels like to exist, before your thoughts turn to why you are needed ...^^";!
 ];
 
 [LookUnderSub;
-  if(noun has animate or scenery) "What a concept!";
-  if(noun in player) "But you are holding ", (ItOrThem) noun, "!";
-  "You find nothing unexpected.";
+    if(noun has animate or scenery) "What a concept!";
+    if(noun in player) "But you are holding ", (ItOrThem) noun, "!";
+    "You find nothing unexpected.";
 ];
 
 [UnlockWithoutKeySub;
-  "You would need to specify which key to use, like ~unlock door with rusty key~.";
+    "You would need to specify which key to use, like ~unlock door with rusty key~.";
 ];
 
 [LockWithoutKeySub;
-  "You would need to specify which key to use, like ~lock door with rusty key~.";
+    "You would need to specify which key to use, like ~lock door with rusty key~.";
 ];
 
 [GetOutBoatSub;
@@ -430,32 +431,32 @@ Object -> Hole "hole"
 ];
 
 [GetWithSub;
-  ! TODO This is a bit hackish
-  if ((noun==IronKey) && (location==PubEast) && (IronKey in KeyHook))
-  {
-    if ((second==WalkingStick) || (second==Magnet))
+    ! TODO This is a bit hackish
+    if ((noun==IronKey) && (location==PubEast) && (IronKey in KeyHook))
     {
-      if (Magnet in WalkingStick)
-      {
-        print "Using the walking stick and magnet together you manage to fish the key off the hook, and retrieve it easily.";
-        move IronKey to player;
-        give IronKey ~scenery;
-        new_line;
-        if (IronKey.movedFlag==0)
+        if ((second==WalkingStick) || (second==Magnet))
         {
-          IronKey.movedFlag = 1;
-          score++;
+            if (Magnet in WalkingStick)
+            {
+                print "Using the walking stick and magnet together you manage to fish the key off the hook, and retrieve it easily.";
+                move IronKey to player;
+                give IronKey ~scenery;
+                new_line;
+                if (IronKey.movedFlag==0)
+                {
+                    IronKey.movedFlag = 1;
+                    score++;
+                }
+                rtrue;
+            }
+            else
+            {
+                "You very nearly can get the key, but not quite...";
+            }
         }
-        rtrue;
-      }
-      else
-      {
-        "You very nearly can get the key, but not quite...";
-      }
+        else "What a concept!";
     }
-    else "What a concept!";
-  }
-  else "That's not necessary.";
+    else "That's not necessary.";
 ];
 
 Extend 'look' * 'under' noun -> LookUnder;
