@@ -116,9 +116,30 @@ Object  -> IronKey "iron key"
 Object  NorthGraveyard "North Graveyard"
  with   description "North of the graveyard.",
         s_to InsideGraveyard,
+        e_to NorthEastGraveyard,
  has    light;
 
-! Crypt -> Get here, and the body is gone
+Object  NorthEastGraveyard "North East Graveyard"
+ with   description "NE graveyard.",
+        w_to NorthGraveyard,
+        s_to EastGraveyard,
+ has    light;
+
+Object EastGraveyard "East Graveyard"
+ with   description "E graveyard",
+        n_to NorthEastGraveyard,
+        s_to SouthEastGraveyard,
+ has    light;
+
+! The body is missing, we need a tricky puzzle here...
+Object -> Crypt "Crypt"
+ with   name 'crypt',
+        description "Crypt";
+
+Object SouthEastGraveyard "SE Graveyard"
+ with   description "SE graveyard",
+        w_to SouthGraveyard,
+        n_to EastGraveyard;
 
 Object  SouthGraveyard "South Graveyard"
  with   description "South of the graveyard.",

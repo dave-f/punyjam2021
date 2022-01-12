@@ -83,11 +83,7 @@ Object  -> Inspector "Inspector"
 
 ! TODO
 
-Object  Crypt "crypt"
- with   description "",
- has    light;
-
-Object  -> Sarcophagus
+Object  Sarcophagus
  with   description "",
  has    container;
 
